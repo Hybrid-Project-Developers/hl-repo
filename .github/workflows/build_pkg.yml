@@ -36,7 +36,7 @@ jobs:
           CHROOT=/tmp/chroot
           sudo sed -i '$ a \\n[multilib]\nInclude = /etc/pacman.d/mirrorlist' /etc/pacman.conf
           su user -c "mkarchroot -C /etc/pacman.conf -M /etc/makepkg.conf $CHROOT/root base base-devel"
-          arch-nspawn $CHROOT/root pacman -Syu
+          su user -c "arch-nspawn $CHROOT/root pacman -Syu"
           git clone https://aur.archlinux.org/asusctl.git
           cd asusctl
           su user -c "yes '' | makechrootpkg -c -r $CHROOT T -- --sign"
