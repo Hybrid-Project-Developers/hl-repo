@@ -1,0 +1,5 @@
+name: Repo Update for Hybrid Linux
+on:
+  schedule:
+    - cron: '0 12 1 * *' # "At 12:00 on day-of-month 1.”
+  workflow_dispatch:
