@@ -17,6 +17,8 @@ jobs:
 
       - name: Prepare for makepkg
         run: |
+          pacman-key --init
+          pacman-key --populate
           pacman-key --recv-key ${{ secrets.GPG_KEY }} --keyserver ${{ secrets.KEYSERVER }}
           pacman-key --lsign-key ${{ secrets.GPG_KEY }}
           sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
