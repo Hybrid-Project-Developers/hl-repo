@@ -24,9 +24,8 @@ jobs:
           pacman-key --recv-key ${{ secrets.GPG_KEY }} --keyserver ${{ secrets.KEYSERVER }}
           pacman-key --lsign-key ${{ secrets.GPG_KEY }}
           pacman -Syu --noconfirm base-devel sudo
-          useradd $USER -G wheel && echo "$USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-          chown $USER -R ..
-          chown $USER -R /tmp
+          useradd user -G wheel && echo "$USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+          chown user -R /tmp
           sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
           sed -i 's/#GPGKEY=""/GPGKEY="${{ secrets.GPG_KEY }}"/g' /etc/makepkg.conf
 
@@ -35,7 +34,7 @@ jobs:
           sudo sed -i '$ a \\n[multilib]\nInclude = /etc/pacman.d/mirrorlist' /etc/pacman.conf
           git clone https://aur.archlinux.org/asusctl.git
           cd asusctl
-          su $USER -c "yes '' | makepkg --noconfirm --sign -s"
+          su user -c "yes '' | makepkg --noconfirm --sign -s"
           sudo cp -r *.pkg.tar.zst *.pkg.tar.zst.sig /tmp/hl-repo/x86_64
       
       - name: Update Repo
