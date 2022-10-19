@@ -39,6 +39,7 @@ jobs:
           git clone https://aur.archlinux.org/asusctl.git
           cd asusctl
           su user -c "yes '' | BUILDDIR=/tmp/asusctl PKGDEST=/tmp/asusctl makepkg --noconfirm --sign -s"
+          cd ${{ env.PKGDEST }}
           sudo cp -r *.pkg.tar.zst *.pkg.tar.zst.sig /tmp/hl-repo/x86_64
       
       - name: Update Repo
