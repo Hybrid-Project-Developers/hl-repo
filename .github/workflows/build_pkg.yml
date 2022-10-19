@@ -33,6 +33,7 @@ jobs:
       - name: Build asusctl
         run: |
           sudo sed -i '$ a \\n[multilib]\nInclude = /etc/pacman.d/mirrorlist' /etc/pacman.conf
+          cd /tmp
           git clone https://aur.archlinux.org/asusctl.git
           cd asusctl
           su user -c "yes '' | makepkg --noconfirm --sign -s"
