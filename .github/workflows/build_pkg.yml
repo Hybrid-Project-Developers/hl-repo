@@ -36,7 +36,7 @@ jobs:
           cd /tmp
           git clone https://aur.archlinux.org/asusctl.git
           cd asusctl
-          su user -c "yes '' | BUILDDIR=/tmp/makepkg $PKGDEST=/tmp/package makepkg --noconfirm --sign -s"
+          su user -c "yes '' | BUILDDIR=/tmp/makepkg PKGDEST=/tmp/package makepkg --noconfirm --sign -s"
           cd /tmp/package
           sudo cp -r *.pkg.tar.zst *.pkg.tar.zst.sig /tmp/hl-repo/x86_64
       
