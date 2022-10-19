@@ -14,6 +14,8 @@ jobs:
           pacman -Syu --noconfirm git devtools
           mkdir /tmp/hl-repo
           git clone https://github.com/Hybrid-Project-Developers/hl-repo.git /tmp/hl-repo
+          mkdir /tmp/hl-repo/x86_64
+          mkdir /tmp/hl-repo/x86_64v3
 
       - name: Prepare for makepkg
         run: |
@@ -21,6 +23,10 @@ jobs:
           pacman-key --populate
           pacman-key --recv-key ${{ secrets.GPG_KEY }} --keyserver ${{ secrets.KEYSERVER }}
           pacman-key --lsign-key ${{ secrets.GPG_KEY }}
+          pacman -Syu --noconfirm base-devel sudo
+          useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+          chown user -R ..
+          chown user -R /tmp
           sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
           sed -i 's/#GPGKEY=""/GPGKEY="${{ secrets.GPG_KEY }}"/g' /etc/makepkg.conf
 
@@ -33,7 +39,7 @@ jobs:
           arch-nspawn $CHROOT/root pacman -Syu
           git clone https://aur.archlinux.org/asusctl.git
           cd asusctl
-          makechrootpkg -c -r $CHROOT T -- --sign
+          su user -c "yes '' | makechrootpkg -c -r $CHROOT T -- --sign"
           cp -r *.pkg.tar.zst *.pkg.tar.zst.sig /tmp/hl-repo/x86_64
       
       - name: Update Repo
