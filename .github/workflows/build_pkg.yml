@@ -1,0 +1,60 @@
+name: Hybrid Linux Repo CI\CD
+on: 
+  schedule:
+    - cron: '17 */12 * * *' # “At minute 17 past every 12th hour.”
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    steps:
+      - name: Prepare for hl-repo
+        run: |
+          pacman -Syu --noconfirm git devtools
+          mkdir /tmp/hl-repo
+          git clone https://github.com/Hybrid-Project-Developers/hl-repo.git /tmp/hl-repo
+
+      - name: Prepare for makepkg
+        run: |
+          pacman-key --recv-key ${{ secrets.GPG_KEY }} --keyserver ${{ secrets.KEYSERVER }}
+          pacman-key --lsign-key ${{ secrets.GPG_KEY }}
+          sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
+          sed -i 's/#GPGKEY=""/GPGKEY="${{ secrets.GPG_KEY }}"/g' /etc/makepkg.conf
+
+      - name: Build asusctl
+        run: |
+          mkdir /tmp/chroot
+          CHROOT=/tmp/chroot
+          sudo sed -i '$ a \\n[multilib]\nInclude = /etc/pacman.d/mirrorlist' /etc/pacman.conf
+          mkarchroot -C /etc/pacman.conf -M /etc/makepkg.conf $CHROOT/root base base-devel
+          arch-nspawn $CHROOT/root pacman -Syu
+          git clone https://aur.archlinux.org/asusctl.git
+          cd asusctl
+          makechrootpkg -c -r $CHROOT T -- --sign
+          cp -r *.pkg.tar.zst *.pkg.tar.zst.sig /tmp/hl-repo/x86_64
+      
+      - name: Update Repo
+        run: |
+          cd /tmp/hl-repo
+          repo-add -v -s hl-repo.db.tar.gz x86_64/*.pkg.tar.zst
+      
+      - name: Upload Packages
+        env:
+          COMMIT_AUTHOR_NAME: ${{ secrets.COMMIT_AUTHOR_NAME }}
+          COMMIT_AUTHOR_EMAIL: ${{ secrets.COMMIT_AUTHOR_EMAIL }}
+          AUTH_USERNAME: Norz3n
+          AUTH_PASSWORD: ${{ secrets.AUTH_PASSWORD }}
+        run: |
+          git config user.name "$COMMIT_AUTHOR_NAME"
+          git config user.email "$COMMIT_AUTHOR_EMAIL"
+          git add -v .
+          git commit -m "Update by $GITHUB_REPOSITORY@$GITHUB_SHA" --allow-empty
+          echo "username=$AUTH_USERNAME" >> /tmp/git-login.txt
+          echo "password=$AUTH_PASSWORD" >> /tmp/git-login.txt
+          echo '#! /bin/bash' >> /tmp/credential-helper
+          echo 'cat /tmp/git-login.txt' >> /tmp/credential-helper
+          chmod +x /tmp/credential-helper
+          git config credential.helper '/tmp/credential-helper'
+          git pull origin master --rebase=true # to avoid conflicts due to data races
+          git push origin master
