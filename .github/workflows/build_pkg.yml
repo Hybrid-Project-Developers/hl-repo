@@ -35,12 +35,12 @@ jobs:
           mkdir /tmp/chroot
           CHROOT=/tmp/chroot
           sudo sed -i '$ a \\n[multilib]\nInclude = /etc/pacman.d/mirrorlist' /etc/pacman.conf
-          su user -c "mkarchroot -C /etc/pacman.conf -M /etc/makepkg.conf $CHROOT/root base base-devel"
-          su user -c "arch-nspawn $CHROOT/root pacman -Syu"
+          sudo mkarchroot -C /etc/pacman.conf -M /etc/makepkg.conf $CHROOT/root base base-devel
+          sudo arch-nspawn $CHROOT/root pacman -Syu
           git clone https://aur.archlinux.org/asusctl.git
           cd asusctl
           su user -c "yes '' | makechrootpkg -c -r $CHROOT T -- --sign"
-          cp -r *.pkg.tar.zst *.pkg.tar.zst.sig /tmp/hl-repo/x86_64
+          sudo cp -r *.pkg.tar.zst *.pkg.tar.zst.sig /tmp/hl-repo/x86_64
       
       - name: Update Repo
         run: |
