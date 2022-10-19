@@ -35,13 +35,13 @@ jobs:
           sudo sed -i '$ a \\n[multilib]\nInclude = /etc/pacman.d/mirrorlist' /etc/pacman.conf
           git clone https://aur.archlinux.org/asusctl.git
           cd asusctl
-          su user -c "yes '' | makepkg --noconfirm --sign -s"
+          su $USER -c "yes '' | makepkg --noconfirm --sign -s"
           sudo cp -r *.pkg.tar.zst *.pkg.tar.zst.sig /tmp/hl-repo/x86_64
       
       - name: Update Repo
         run: |
           cd /tmp/hl-repo
-          repo-add --verify --sign hl-repo.db.tar.gz x86_64/*.pkg.tar.zst
+          sudo repo-add --verify --sign hl-repo.db.tar.gz x86_64/*.pkg.tar.zst
       
       - name: Upload Packages
         env:
