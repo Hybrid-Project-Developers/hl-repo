@@ -19,7 +19,7 @@ jobs:
           pacman-key --lsign-key ${{ secrets.GPG_KEY }}
           sed -i '$ a \\n[multilib]\nInclude = /etc/pacman.d/mirrorlist' /etc/pacman.conf
           pacman -Syu --noconfirm base-devel sudo git
-          useradd user -m -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+          useradd user -m -G wheel && echo "%wheel ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
           chown user -R ..
           chown user -R /tmp
       - name: Prepare for hl-repo
