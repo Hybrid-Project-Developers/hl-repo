@@ -13,6 +13,7 @@ jobs:
     steps:
       - name: Prepare for hl-repo
         run: |
+          echo $USER
           pacman -Syu --noconfirm git devtools
           mkdir /tmp/hl-repo
           git clone https://github.com/Hybrid-Project-Developers/hl-repo.git ~/hl-repo
