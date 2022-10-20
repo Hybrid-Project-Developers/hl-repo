@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     container: archlinux:latest
     steps:
-      - name: Prepare for hl-repo
+      - name: Prepare
         run: |
           pacman-key --init
           pacman-key --populate
@@ -22,7 +22,8 @@ jobs:
           useradd user -m -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
           chown user -R ..
           chown user -R /tmp
-          echo $USER
+      - name: Prepare for hl-repo
+        run: |
           mkdir /home/user/hl-repo
           git clone https://github.com/Hybrid-Project-Developers/hl-repo.git ~/hl-repo
           mkdir /home/user/hl-repo/x86_64
