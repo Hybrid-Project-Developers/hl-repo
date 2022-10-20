@@ -37,9 +37,8 @@ jobs:
           sudo sed -i '$ a \\n[multilib]\nInclude = /etc/pacman.d/mirrorlist' /etc/pacman.conf
           cd /tmp
           git clone https://aur.archlinux.org/asusctl.git
-          chown user -R asusctl
           cd asusctl
-          su user -c "yes '' | makepkg --noconfirm --sign -s"
+          sudo -u user makepkg --noconfirm --sign -s
           cd ${{ env.PKGDEST }}
           sudo cp -r *.pkg.tar.zst *.pkg.tar.zst.sig /tmp/hl-repo/x86_64
       
