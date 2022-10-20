@@ -5,6 +5,7 @@ on:
   workflow_dispatch:
 env:
   PKGDEST: /tmp/packages
+  HOME: /home/user
 
 jobs:
   build:
@@ -28,7 +29,6 @@ jobs:
       - name: Import GPG Key
         uses: crazy-max/ghaction-import-gpg@v1
         env:
-          HOME: /home/user
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
           PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
