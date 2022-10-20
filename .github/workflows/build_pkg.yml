@@ -33,14 +33,14 @@ jobs:
           cd /home/user/
           sudo -u user git clone https://aur.archlinux.org/asusctl.git 
           cd asusctl
-          sudo -u user makepkg --noconfirm --sign -s
+          sudo -u user makepkg --noconfirm -s
           cd ${{ env.PKGDEST }}
           sudo cp -r *.pkg.tar.zst *.pkg.tar.zst.sig ~/hl-repo/x86_64
       
       - name: Update Repo
         run: |
           cd /home/user/hl-repo
-          sudo -u user repo-add --verify --sign hl-repo.db.tar.gz x86_64/*.pkg.tar.zst
+          sudo -u user repo-addl-repo.db.tar.gz *
       
       - name: Upload Packages
         env:
