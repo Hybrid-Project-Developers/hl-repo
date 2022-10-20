@@ -15,9 +15,9 @@ jobs:
         run: |
           pacman -Syu --noconfirm git devtools
           mkdir /tmp/hl-repo
-          git clone https://github.com/Hybrid-Project-Developers/hl-repo.git /tmp/hl-repo
-          mkdir /tmp/hl-repo/x86_64
-          mkdir /tmp/hl-repo/x86_64v3
+          git clone https://github.com/Hybrid-Project-Developers/hl-repo.git ~/hl-repo
+          mkdir ~/hl-repo/x86_64
+          mkdir ~/hl-repo/x86_64v3
 
       - name: Prepare for makepkg
         run: |
@@ -35,12 +35,12 @@ jobs:
       - name: Build asusctl
         run: |
           sudo sed -i '$ a \\n[multilib]\nInclude = /etc/pacman.d/mirrorlist' /etc/pacman.conf
-          cd /tmp
-          git clone https://aur.archlinux.org/asusctl.git
+          cd ~
+          git clone https://aur.archlinux.org/asusctl.git 
           cd asusctl
           sudo -u user makepkg --noconfirm --sign -s
           cd ${{ env.PKGDEST }}
-          sudo cp -r *.pkg.tar.zst *.pkg.tar.zst.sig /tmp/hl-repo/x86_64
+          sudo cp -r *.pkg.tar.zst *.pkg.tar.zst.sig ~/hl-repo/x86_64
       
       - name: Update Repo
         run: |
