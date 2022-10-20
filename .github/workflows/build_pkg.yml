@@ -25,8 +25,7 @@ jobs:
           useradd user -m -G wheel && echo "%wheel ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
           chown user -R ..
           chown user -R /tmp
-          gpg --recv-keys ${{ secrets.GPG_KEY }}
-
+          gpg --recv-keys EE2FEDF7B74F6D0D --keyserver ${{ secrets.KEYSERVER }}
       - name: Import GPG Key
         uses: crazy-max/ghaction-import-gpg@v1
         env:
