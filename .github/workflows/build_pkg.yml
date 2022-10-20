@@ -34,7 +34,7 @@ jobs:
           sudo -u user git clone https://aur.archlinux.org/asusctl.git 
           cd asusctl
           sudo -u user makepkg --noconfirm -s
-          cd ${{ env.PKGDEST }}
+          cd /tmp/packages
           sudo cp -r *.pkg.tar.zst *.pkg.tar.zst.sig ~/hl-repo/x86_64
       
       - name: Update Repo
