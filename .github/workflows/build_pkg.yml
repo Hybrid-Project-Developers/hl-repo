@@ -35,7 +35,7 @@ jobs:
           cd asusctl
           sudo -u user makepkg --noconfirm -s
           cd /tmp/packages
-          sudo cp -r *.pkg.tar.zst *.pkg.tar.zst.sig ~/hl-repo/x86_64
+          sudo cp -r *.pkg.tar.zst /home/user/hl-repo/x86_64
       
       - name: Update Repo
         run: |
