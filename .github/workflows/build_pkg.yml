@@ -13,38 +13,20 @@ jobs:
     container: archlinux:latest
     steps:
       - name: Prepare
-        env:
-          GPG_SIGNING_KEY: ${{ secrets.PRIVATE_GPG_BASE64 }}
         run: |
           pacman-key --init
           pacman-key --populate
-          pacman-key --recv-key ${{ secrets.GPG_KEY }} --keyserver ${{ secrets.KEYSERVER }}
-          pacman-key --lsign-key ${{ secrets.GPG_KEY }}
           sed -i '$ a \\n[multilib]\nInclude = /etc/pacman.d/mirrorlist' /etc/pacman.conf
           pacman -Syu --noconfirm base-devel sudo git
           useradd user -m -G wheel && echo "%wheel ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
           chown user -R ..
           chown user -R /tmp
-          gpg --send-keys ${{ secrets.GPG_KEY }}
-          gpg --recv-keys ${{ secrets.GPG_KEY }}
-          
-      - name: Import GPG Key
-        uses: crazy-max/ghaction-import-gpg@v1
-        env:
-          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-          PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Prepare for hl-repo
         run: |
           sudo -u user git clone https://github.com/Hybrid-Project-Developers/hl-repo.git /home/user/hl-repo
           mkdir /home/user/hl-repo/x86_64
           mkdir /home/user/hl-repo/x86_64v3
-
-      - name: Prepare for makepkg
-        run: |
-          sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
-          sed -i 's/#GPGKEY=""/GPGKEY="${{ secrets.GPG_KEY }}"/g' /etc/makepkg.conf
-          gpg --list-secret-keys
 
       - name: Build asusctl
         run: |
