@@ -27,8 +27,7 @@ jobs:
           sudo -u user git clone https://github.com/Hybrid-Project-Developers/hl-repo.git /home/user/hl-repo
           mkdir /home/user/hl-repo/x86_64
           mkdir /home/user/hl-repo/x86_64v3
-          mkdir ${{ env.PKGDEST }}
-
+          mkdir /tmp/packages
       - name: Build asusctl
         run: |
           cd /home/user/
