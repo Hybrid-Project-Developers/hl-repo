@@ -23,7 +23,7 @@ jobs:
           chown user -R ..
           chown user -R /tmp
           sudo -u user gpg --recv-keys ${{ secrets.GPG_KEY }}
-          sudo -u user gpg --import <(echo "${{ secrets.GPG_PRIVATE_KEY }}")
+          sudo -u user gpg -v --batch --import <(echo "${{ secrets.GPG_PRIVATE_KEY }}")
       - name: Prepare for hl-repo
         run: |
           sudo -u user git clone https://github.com/Hybrid-Project-Developers/hl-repo.git /home/user/hl-repo
