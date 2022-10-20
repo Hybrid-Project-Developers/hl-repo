@@ -37,7 +37,7 @@ jobs:
       - name: Build asusctl
         run: |
           cd /home/user/
-          git clone https://aur.archlinux.org/asusctl.git 
+          sudo -u user git clone https://aur.archlinux.org/asusctl.git 
           cd asusctl
           sudo -u user makepkg --noconfirm --sign -s
           cd ${{ env.PKGDEST }}
@@ -46,7 +46,7 @@ jobs:
       - name: Update Repo
         run: |
           cd /home/user/hl-repo
-          sudo repo-add --verify --sign hl-repo.db.tar.gz x86_64/*.pkg.tar.zst
+          sudo -u user repo-add --verify --sign hl-repo.db.tar.gz x86_64/*.pkg.tar.zst
       
       - name: Upload Packages
         env:
