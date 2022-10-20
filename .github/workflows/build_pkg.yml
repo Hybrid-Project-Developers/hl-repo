@@ -12,6 +12,8 @@ jobs:
     container: archlinux:latest
     steps:
       - name: Prepare
+        env:
+          GPG_SIGNING_KEY: ${{ secrets.PRIVATE_GPG_BASE64 }}
         run: |
           pacman-key --init
           pacman-key --populate
@@ -22,9 +24,13 @@ jobs:
           useradd user -m -G wheel && echo "%wheel ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
           chown user -R ..
           chown user -R /tmp
-          export GPG_TTY=$(tty)
-          sudo -u user gpg --recv-keys ${{ secrets.GPG_KEY }}
-          sudo -u user gpg2 -v --batch --import <(echo "${{ secrets.GPG_PRIVATE_KEY }}")
+
+      - name: Import GPG Key
+        uses: crazy-max/ghaction-import-gpg@v1
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
       - name: Prepare for hl-repo
         run: |
           sudo -u user git clone https://github.com/Hybrid-Project-Developers/hl-repo.git /home/user/hl-repo
