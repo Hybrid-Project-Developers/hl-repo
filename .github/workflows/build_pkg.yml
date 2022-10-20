@@ -15,10 +15,10 @@ jobs:
         run: |
           echo $USER
           pacman -Syu --noconfirm git devtools
-          mkdir /tmp/hl-repo
+          mkdir /home/user/hl-repo
           git clone https://github.com/Hybrid-Project-Developers/hl-repo.git ~/hl-repo
-          mkdir ~/hl-repo/x86_64
-          mkdir ~/hl-repo/x86_64v3
+          mkdir /home/user/hl-repo/x86_64
+          mkdir /home/user/hl-repo/x86_64v3
 
       - name: Prepare for makepkg
         run: |
@@ -26,6 +26,7 @@ jobs:
           pacman-key --populate
           pacman-key --recv-key ${{ secrets.GPG_KEY }} --keyserver ${{ secrets.KEYSERVER }}
           pacman-key --lsign-key ${{ secrets.GPG_KEY }}
+          sudo sed -i '$ a \\n[multilib]\nInclude = /etc/pacman.d/mirrorlist' /etc/pacman.conf
           pacman -Syu --noconfirm base-devel sudo
           useradd user -m -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
           chown user -R ..
@@ -35,7 +36,6 @@ jobs:
 
       - name: Build asusctl
         run: |
-          sudo sed -i '$ a \\n[multilib]\nInclude = /etc/pacman.d/mirrorlist' /etc/pacman.conf
           cd /home/user/
           git clone https://aur.archlinux.org/asusctl.git 
           cd asusctl
@@ -45,7 +45,7 @@ jobs:
       
       - name: Update Repo
         run: |
-          cd /tmp/hl-repo
+          cd /home/user/hl-repo
           sudo repo-add --verify --sign hl-repo.db.tar.gz x86_64/*.pkg.tar.zst
       
       - name: Upload Packages
