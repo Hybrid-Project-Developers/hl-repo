@@ -27,7 +27,7 @@ jobs:
           pacman-key --recv-key ${{ secrets.GPG_KEY }} --keyserver ${{ secrets.KEYSERVER }}
           pacman-key --lsign-key ${{ secrets.GPG_KEY }}
           pacman -Syu --noconfirm base-devel sudo
-          useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+          useradd user -m -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
           chown user -R ..
           chown user -R /tmp
           sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
@@ -36,7 +36,7 @@ jobs:
       - name: Build asusctl
         run: |
           sudo sed -i '$ a \\n[multilib]\nInclude = /etc/pacman.d/mirrorlist' /etc/pacman.conf
-          cd ~
+          cd /home/user/
           git clone https://aur.archlinux.org/asusctl.git 
           cd asusctl
           sudo -u user makepkg --noconfirm --sign -s
