@@ -28,7 +28,7 @@ jobs:
       - name: Import GPG Key
         uses: crazy-max/ghaction-import-gpg@v1
         env:
-          HOME: = /home/user
+          HOME: /home/user
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
           PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
