@@ -42,6 +42,7 @@ jobs:
         run: |
           sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
           sed -i 's/#GPGKEY=""/GPGKEY="${{ secrets.GPG_KEY }}"/g' /etc/makepkg.conf
+          sudo -u user gpg --list-secret-keys
 
       - name: Build asusctl
         run: |
