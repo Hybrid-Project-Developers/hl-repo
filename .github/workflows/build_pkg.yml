@@ -22,7 +22,9 @@ jobs:
           useradd user -m -G wheel && echo "%wheel ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
           chown user -R ..
           chown user -R /tmp
-          sudo -u user gpg --recv-keys  ${{ secrets.GPG_KEY }}
+          sudo -u user gpg --recv-keys ${{ secrets.GPG_KEY }} 
+          sudo -u user cat ${{ secrets.GPG_PRIVATE_KEY }} > /home/user/private.key
+          sudo -u user gpg --import /home/user/private.key
       - name: Prepare for hl-repo
         run: |
           sudo -u user git clone https://github.com/Hybrid-Project-Developers/hl-repo.git /home/user/hl-repo
