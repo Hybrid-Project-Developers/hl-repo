@@ -13,8 +13,16 @@ jobs:
     steps:
       - name: Prepare for hl-repo
         run: |
+          pacman-key --init
+          pacman-key --populate
+          pacman-key --recv-key ${{ secrets.GPG_KEY }} --keyserver ${{ secrets.KEYSERVER }}
+          pacman-key --lsign-key ${{ secrets.GPG_KEY }}
+          sudo sed -i '$ a \\n[multilib]\nInclude = /etc/pacman.d/mirrorlist' /etc/pacman.conf
+          pacman -Syu --noconfirm base-devel sudo git
+          useradd user -m -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+          chown user -R ..
+          chown user -R /tmp
           echo $USER
-          pacman -Syu --noconfirm git devtools
           mkdir /home/user/hl-repo
           git clone https://github.com/Hybrid-Project-Developers/hl-repo.git ~/hl-repo
           mkdir /home/user/hl-repo/x86_64
@@ -22,15 +30,6 @@ jobs:
 
       - name: Prepare for makepkg
         run: |
-          pacman-key --init
-          pacman-key --populate
-          pacman-key --recv-key ${{ secrets.GPG_KEY }} --keyserver ${{ secrets.KEYSERVER }}
-          pacman-key --lsign-key ${{ secrets.GPG_KEY }}
-          sudo sed -i '$ a \\n[multilib]\nInclude = /etc/pacman.d/mirrorlist' /etc/pacman.conf
-          pacman -Syu --noconfirm base-devel sudo
-          useradd user -m -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
-          chown user -R ..
-          chown user -R /tmp
           sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
           sed -i 's/#GPGKEY=""/GPGKEY="${{ secrets.GPG_KEY }}"/g' /etc/makepkg.conf
 
