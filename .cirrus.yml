@@ -21,9 +21,7 @@ update_hl_core_task:
     - su user -c "yes '' | makepkg --noconfirm -s"
 
   build_calamares_hybrid_script:
-    - cd ../..
-    - pwd
-    - cd Hybrid-Linux-PKGBUILDs/calamares-hybrid/
+    - cd /tmp/cirrus-ci-build/Hybrid-Linux-PKGBUILDs/calamares-hybrid/
     - pacman -Syu --noconfirm base-devel sudo schedtool
     - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
     - chown user -R ..
@@ -71,9 +69,7 @@ update_hl_additions_task:
     - su user -c "yes '' | makepkg --noconfirm -s"
   
   build_amdgpu_vulkan_switcher_script:
-    - cd ..
-    - pwd
-    - cd amdgpu-vulkan-switcher
+    - cd /tmp/cirrus-ci-build/Hybrid-Linux-PKGBUILDs/
     - pacman -Syu --noconfirm base-devel sudo schedtool
     - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
     - chown user -R ..
