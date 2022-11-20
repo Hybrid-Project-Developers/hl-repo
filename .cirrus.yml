@@ -81,7 +81,7 @@ update_hl_additions_task:
   build_amdgpu_opencl_switcher_script:
     - echo "Checkout PKGBUILDs Repo"
     - git clone https://github.com/Hybrid-Project-Developers/Hybrid-Linux-PKGBUILDs.git
-    - cd Hybrid-Linux-PKGBUILDs/amdgpu-opencl-swithcer
+    - cd Hybrid-Linux-PKGBUILDs/amdgpu-opencl-switcher
     - pacman -Syu --noconfirm base-devel sudo schedtool
     - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
     - chown user -R ..
