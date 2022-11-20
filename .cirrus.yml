@@ -6,35 +6,44 @@ update_hl_core_task:
   env:
     PKGDEST: /tmp/hl-core
 
-  prepare_makepkg_script:
-    - echo "Preparing for makepkg"
-    - pacman -Syu --noconfirm git base-devel sudo schedtool
-    - useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-    - chown user -R ..
-    - chown user -R /tmp
-
   build_x86_64_mirrorlist_script:
     - echo "Checkout PKGBUILDs Repo"
     - git clone https://github.com/Hybrid-Project-Developers/Hybrid-Linux-PKGBUILDs.git
     - cd Hybrid-Linux-PKGBUILDs/hybrid-mirrorlist
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    - chown user -R ..
+    - chown user -R /tmp
     - echo "Build Mirrorlist"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
   build_x86_64_v2_mirrorlist_script:
     - cd ../..
     - cd Hybrid-Linux-PKGBUILDs/hybrid-v2-mirrorlist
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    - chown user -R ..
+    - chown user -R /tmp
     - echo "Build x86_64v2 Mirrorlist"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
   build_x86_64_v3_mirrorlist_script:
     - cd ../..
     - cd Hybrid-Linux-PKGBUILDs/hybrid-v3-mirrorlist
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    - chown user -R ..
+    - chown user -R /tmp
     - echo "Build x86_64v3 Mirrorlist"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
   build_calamares_hybrid_script:
     - cd ../..
     - cd Hybrid-Linux-PKGBUILDs/calamares-hybrid
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    - chown user -R ..
+    - chown user -R /tmp
     - echo "Build Calamares"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -63,17 +72,14 @@ update_hl_additions_task:
   env:
     PKGDEST: /tmp/hl-additions
 
-  prepare_makepkg_script:
-    - echo "Preparing for makepkg"
-    - pacman -Syu --noconfirm git base-devel sudo schedtool
-    - useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-    - chown user -R ..
-    - chown user -R /tmp
-
   build_amdgpu_opencl_switcher_script:
     - echo "Checkout PKGBUILDs Repo"
     - git clone https://github.com/Hybrid-Project-Developers/Hybrid-Linux-PKGBUILDs.git
     - cd Hybrid-Linux-PKGBUILDs/amdgpu-opencl-swithcer
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    - chown user -R ..
+    - chown user -R /tmp
     - echo "Build amdgpu-opencl-swithcer"
     - su user -c "yes '' | makepkg --noconfirm -s"
   
@@ -81,6 +87,10 @@ update_hl_additions_task:
     - echo "Checkout PKGBUILDs Repo"
     - git clone https://github.com/Hybrid-Project-Developers/Hybrid-Linux-PKGBUILDs.git
     - cd Hybrid-Linux-PKGBUILDs/amdgpu-vulkan-swithcer
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    - chown user -R ..
+    - chown user -R /tmp
     - echo "Build amdgpu-vulkan-swithcer"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -89,6 +99,10 @@ update_hl_additions_task:
     - echo "Clonning hidpi-daemon from AUR"
     - git clone https://aur.archlinux.org/hidpi-daemon.git
     - cd hidpi-daemon
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    - chown user -R ..
+    - chown user -R /tmp
     - echo "Build hidpi-daemon"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -97,6 +111,10 @@ update_hl_additions_task:
     - echo "Clonning hidpi-daemon from AUR"
     - git clone https://aur.archlinux.org/hidpi-daemon.git
     - cd nvidia-tweaks
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    - chown user -R ..
+    - chown user -R /tmp
     - echo "Build nvidia-tweaks"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -136,6 +154,10 @@ update_hl_drivers_task:
     - echo "Checkout amf-amdgpu-pro-fix AUR Repo"
     - git clone https://aur.archlinux.org/amdgpu-pro-installer-fix.git
     - cd amdgpu-pro-installer-fix
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    - chown user -R ..
+    - chown user -R /tmp
     - echo "Build amf-amdgpu-pro-fix"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -144,6 +166,10 @@ update_hl_drivers_task:
     - echo "Clonning e1000e-dkms from AUR"
     - git clone https://aur.archlinux.org/e1000e-dkms.git
     - cd e1000e-dkms
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    - chown user -R ..
+    - chown user -R /tmp
     - echo "Build e1000e-dkms"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -152,6 +178,10 @@ update_hl_drivers_task:
     - echo "Clonning hid-sony-panic-fix-dkms from AUR"
     - git clone https://aur.archlinux.org/hid-sony-panic-fix-dkms.git
     - cd hid-sony-panic-fix-dkms
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    - chown user -R ..
+    - chown user -R /tmp
     - echo "Build hid-sony-panic-fix-dkms"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -160,6 +190,10 @@ update_hl_drivers_task:
     - echo "Clonning nvidia-390xx-dkms from Herecura Gitlab"
     - git clone https://gitlab.com/herecura/packages/nvidia-390xx-dkms.git
     - cd nvidia-390xx-dkms
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    - chown user -R ..
+    - chown user -R /tmp
     - echo "Build nvidia-390xx-dkms"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -168,6 +202,10 @@ update_hl_drivers_task:
     - echo "Clonning nvidia-390xx-utils from Herecura Gitlab"
     - git clone https://gitlab.com/herecura/packages/nvidia-390xx-utils.git
     - cd nvidia-390xx-utils
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    - chown user -R ..
+    - chown user -R /tmp
     - echo "Build nvidia-390xx-dkms"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -175,7 +213,11 @@ update_hl_drivers_task:
     - cd ..
     - echo "Clonning nvidia-470xx-dkms from Herecura Gitlab"
     - git clone https://gitlab.com/herecura/packages/nvidia-470xx-dkms.git
-    - cd nvidia-390xx-dkms
+    - cd nvidia-470xx-dkms
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    - chown user -R ..
+    - chown user -R /tmp
     - echo "Build nvidia-390xx-dkms"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -183,7 +225,11 @@ update_hl_drivers_task:
     - cd ..
     - echo "Clonning nvidia-470xx-utils from Herecura Gitlab"
     - git clone https://gitlab.com/herecura/packages/nvidia-470xx-utils.git
-    - cd nvidia-390xx-utils
+    - cd nvidia-470xx-utils
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    - chown user -R ..
+    - chown user -R /tmp
     - echo "Build nvidia-390xx-dkms"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -192,6 +238,10 @@ update_hl_drivers_task:
     - echo "Clonning nvidia-vaapi-driver-git from AUR"
     - git clone https://aur.archlinux.org/nvidia-vaapi-driver-git.git
     - cd nvidia-vaapi-driver-git
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    - chown user -R ..
+    - chown user -R /tmp
     - echo "Build nvidia-vaapi-driver-git"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -200,6 +250,10 @@ update_hl_drivers_task:
     - echo "Clonning winesync from AUR"
     - git clone https://aur.archlinux.org/winesync.git
     - cd winesync
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    - chown user -R ..
+    - chown user -R /tmp
     - echo "Build winesync"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -241,6 +295,10 @@ update_hl_multilib_task:
     - echo "Checkout amf-amdgpu-pro-fix AUR Repo"
     - git clone https://aur.archlinux.org/amdgpu-pro-installer-fix.git
     - cd amdgpu-pro-installer-fix
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    - chown user -R ..
+    - chown user -R /tmp
     - echo "Build amf-amdgpu-pro-fix"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -282,6 +340,10 @@ update_hl_soft_task:
     - echo "Clone asusctl from AUR"
     - git clone https://aur.archlinux.org/asusctl.git
     - cd asusctl
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    - chown user -R ..
+    - chown user -R /tmp
     - echo "Build asusctl"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -290,6 +352,10 @@ update_hl_soft_task:
     - echo "Clonning discord-screenaudio from AUR"
     - git clone https://aur.archlinux.org/discord-screenaudio.git
     - cd discord-screenaudio
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    - chown user -R ..
+    - chown user -R /tmp
     - echo "Build discord-screenaudio"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -298,6 +364,10 @@ update_hl_soft_task:
     - echo "Clonning obs-studio-amf from AUR"
     - git clone https://aur.archlinux.org/obs-studio-amf.git
     - cd obs-studio-amf
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    - chown user -R ..
+    - chown user -R /tmp
     - echo "Build obs-studio-amf"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -306,6 +376,10 @@ update_hl_soft_task:
     - echo "Checkout PKGBUILDs Repo"
     - git clone https://github.com/Hybrid-Project-Developers/Hybrid-Linux-PKGBUILDs.git
     - cd Hybrid-Linux-PKGBUILDs/startwine
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    - chown user -R ..
+    - chown user -R /tmp
     - echo "Build startwine"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -314,6 +388,10 @@ update_hl_soft_task:
     - echo "Clonning portproton from AUR"
     - git clone https://aur.archlinux.org/portproton.git
     - cd portproton
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    - chown user -R ..
+    - chown user -R /tmp
     - echo "Build portproton"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -322,6 +400,10 @@ update_hl_soft_task:
     - echo "Clonning portproton from AUR"
     - git clone https://aur.archlinux.org/openoffice-bin.git
     - cd openoffice-bin
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    - chown user -R ..
+    - chown user -R /tmp
     - echo "Build openoffice-bin"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
