@@ -15,8 +15,8 @@ update_hl_core_task:
     - cd Hybrid-Linux-PKGBUILDs/hybrid-mirrorlist
     - pacman -Syu --noconfirm base-devel sudo schedtool
     - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
-    - chown user -R ..
-    - chown user -R /tmp
+    - chown user/user -R ..
+    - chown user/user -R /tmp
     - echo "Build Mirrorlist"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -25,8 +25,8 @@ update_hl_core_task:
     - cd hybrid-Linux-PKGBUILDs/calamares-hybrid/
     - pacman -Syu --noconfirm base-devel sudo schedtool
     - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
-    - chown user -R ..
-    - chown user -R /tmp
+    - chown user/user -R ..
+    - chown user/user -R /tmp
     - echo "Build Calamares"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -64,8 +64,8 @@ update_hl_additions_task:
     - cd Hybrid-Linux-PKGBUILDs/amdgpu-opencl-switcher
     - pacman -Syu --noconfirm base-devel sudo schedtool
     - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
-    - chown user -R ..
-    - chown user -R /tmp
+    - chown user/user -R ..
+    - chown user/user -R /tmp
     - echo "Build amdgpu-opencl-swithcer"
     - su user -c "yes '' | makepkg --noconfirm -s"
   
@@ -74,8 +74,8 @@ update_hl_additions_task:
     - cd amdgpu-vulkan-switcher
     - pacman -Syu --noconfirm base-devel sudo schedtool
     - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
-    - chown user -R ..
-    - chown user -R /tmp
+    - chown user/user -R ..
+    - chown user/user -R /tmp
     - echo "Build amdgpu-vulkan-switcher"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -86,8 +86,8 @@ update_hl_additions_task:
     - cd hidpi-daemon
     - pacman -Syu --noconfirm base-devel sudo schedtool
     - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
-    - chown user -R ..
-    - chown user -R /tmp
+    - chown user/user -R ..
+    - chown user/user -R /tmp
     - echo "Build hidpi-daemon"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -98,8 +98,8 @@ update_hl_additions_task:
     - cd nvidia-tweaks
     - pacman -Syu --noconfirm base-devel sudo schedtool
     - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
-    - chown user -R ..
-    - chown user -R /tmp
+    - chown user/user -R ..
+    - chown user/user -R /tmp
     - echo "Build nvidia-tweaks"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -137,8 +137,8 @@ update_hl_drivers_task:
     - cd amdgpu-pro-installer-fix
     - pacman -Syu --noconfirm base-devel sudo schedtool
     - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
-    - chown user -R ..
-    - chown user -R /tmp
+    - chown user/user -R ..
+    - chown user/user -R /tmp
     - echo "Build amf-amdgpu-pro-fix"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -149,8 +149,8 @@ update_hl_drivers_task:
     - cd e1000e-dkms
     - pacman -Syu --noconfirm base-devel sudo schedtool
     - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
-    - chown user -R ..
-    - chown user -R /tmp
+    - chown user/user -R ..
+    - chown user/user -R /tmp
     - echo "Build e1000e-dkms"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -161,8 +161,8 @@ update_hl_drivers_task:
     - cd hid-sony-panic-fix-dkms
     - pacman -Syu --noconfirm base-devel sudo schedtool
     - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
-    - chown user -R ..
-    - chown user -R /tmp
+    - chown user/user -R ..
+    - chown user/user -R /tmp
     - echo "Build hid-sony-panic-fix-dkms"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -173,8 +173,8 @@ update_hl_drivers_task:
     - cd nvidia-390xx-dkms
     - pacman -Syu --noconfirm base-devel sudo schedtool
     - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
-    - chown user -R ..
-    - chown user -R /tmp
+    - chown user/user -R ..
+    - chown user/user -R /tmp
     - echo "Build nvidia-390xx-dkms"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -185,8 +185,8 @@ update_hl_drivers_task:
     - cd nvidia-390xx-utils
     - pacman -Syu --noconfirm base-devel sudo schedtool
     - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
-    - chown user -R ..
-    - chown user -R /tmp
+    - chown user/user -R ..
+    - chown user/user -R /tmp
     - echo "Build nvidia-390xx-dkms"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -197,8 +197,8 @@ update_hl_drivers_task:
     - cd nvidia-470xx-dkms
     - pacman -Syu --noconfirm base-devel sudo schedtool
     - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
-    - chown user -R ..
-    - chown user -R /tmp
+    - chown user/user -R ..
+    - chown user/user -R /tmp
     - echo "Build nvidia-390xx-dkms"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -209,8 +209,8 @@ update_hl_drivers_task:
     - cd nvidia-470xx-utils
     - pacman -Syu --noconfirm base-devel sudo schedtool
     - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
-    - chown user -R ..
-    - chown user -R /tmp
+    - chown user/user -R ..
+    - chown user/user -R /tmp
     - echo "Build nvidia-390xx-dkms"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -221,8 +221,8 @@ update_hl_drivers_task:
     - cd nvidia-vaapi-driver-git
     - pacman -Syu --noconfirm base-devel sudo schedtool
     - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
-    - chown user -R ..
-    - chown user -R /tmp
+    - chown user/user -R ..
+    - chown user/user -R /tmp
     - echo "Build nvidia-vaapi-driver-git"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -233,8 +233,8 @@ update_hl_drivers_task:
     - cd winesync
     - pacman -Syu --noconfirm base-devel sudo schedtool
     - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
-    - chown user -R ..
-    - chown user -R /tmp
+    - chown user/user -R ..
+    - chown user/user -R /tmp
     - echo "Build winesync"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -274,8 +274,8 @@ update_hl_multilib_task:
     - cd amdgpu-pro-installer-fix
     - pacman -Syu --noconfirm base-devel sudo schedtool
     - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
-    - chown user -R ..
-    - chown user -R /tmp
+    - chown user/user -R ..
+    - chown user/user -R /tmp
     - echo "Build amf-amdgpu-pro-fix"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -327,8 +327,8 @@ update_hl_soft_task:
     - cd discord-screenaudio
     - pacman -Syu --noconfirm base-devel sudo schedtool
     - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
-    - chown user -R ..
-    - chown user -R /tmp
+    - chown user/user -R ..
+    - chown user/user -R /tmp
     - echo "Build discord-screenaudio"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -351,8 +351,8 @@ update_hl_soft_task:
     - cd Hybrid-Linux-PKGBUILDs/startwine
     - pacman -Syu --noconfirm base-devel sudo schedtool
     - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
-    - chown user -R ..
-    - chown user -R /tmp
+    - chown user/user -R ..
+    - chown user/user -R /tmp
     - echo "Build startwine"
     - su user -c "yes '' | makepkg --noconfirm --nodeps -s"
 
@@ -363,8 +363,8 @@ update_hl_soft_task:
     - cd portproton
     - pacman -Syu --noconfirm base-devel sudo schedtool
     - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
-    - chown user -R ..
-    - chown user -R /tmp
+    - chown user/user -R ..
+    - chown user/user -R /tmp
     - echo "Build portproton"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
@@ -375,8 +375,8 @@ update_hl_soft_task:
     - cd openoffice-bin
     - pacman -Syu --noconfirm base-devel sudo schedtool
     - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
-    - chown user -R ..
-    - chown user -R /tmp
+    - chown user/user -R ..
+    - chown user/user -R /tmp
     - echo "Build openoffice-bin"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
