@@ -9,7 +9,7 @@ update_hl_core_task:
   install_git_script:
     - pacman -Syu --noconfirm git
 
-  build_x86_64_mirrorlist_script:
+  build_mirrorlists_script:
     - echo "Checkout PKGBUILDs Repo"
     - git clone https://github.com/Hybrid-Project-Developers/Hybrid-Linux-PKGBUILDs.git
     - cd Hybrid-Linux-PKGBUILDs/hybrid-mirrorlist
@@ -18,26 +18,6 @@ update_hl_core_task:
     - chown user -R ..
     - chown user -R /tmp
     - echo "Build Mirrorlist"
-    - su user -c "yes '' | makepkg --noconfirm -s"
-
-  build_x86_64_v2_mirrorlist_script:
-    - cd ..
-    - cd hybrid-v2-mirrorlist
-    - pacman -Syu --noconfirm base-devel sudo schedtool
-    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
-    - chown user -R ..
-    - chown user -R /tmp
-    - echo "Build x86_64v2 Mirrorlist"
-    - su user -c "yes '' | makepkg --noconfirm -s"
-
-  build_x86_64_v3_mirrorlist_script:
-    - cd ..
-    - cd hybrid-v3-mirrorlist
-    - pacman -Syu --noconfirm base-devel sudo schedtool
-    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
-    - chown user -R ..
-    - chown user -R /tmp
-    - echo "Build x86_64v3 Mirrorlist"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
   build_calamares_hybrid_script:
@@ -90,13 +70,13 @@ update_hl_additions_task:
     - su user -c "yes '' | makepkg --noconfirm -s"
   
   build_amdgpu_vulkan_switcher_script:
-    - cd ../..
-    - cd Hybrid-Linux-PKGBUILDs/amdgpu-vulkan-swithcer
+    - cd ..
+    - cd amdgpu-vulkan-switcher
     - pacman -Syu --noconfirm base-devel sudo schedtool
     - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
     - chown user -R ..
     - chown user -R /tmp
-    - echo "Build amdgpu-vulkan-swithcer"
+    - echo "Build amdgpu-vulkan-switcher"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
   build_hidpi_daemon_script:
@@ -352,17 +332,17 @@ update_hl_soft_task:
     - echo "Build discord-screenaudio"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
-  build_obs_studio_amf_script:
-    - cd ..
-    - echo "Clonning obs-studio-amf from AUR"
-    - git clone https://aur.archlinux.org/obs-studio-amf.git
-    - cd obs-studio-amf
-    - pacman -Syu --noconfirm base-devel sudo schedtool
-    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
-    - chown user -R ..
-    - chown user -R /tmp
-    - echo "Build obs-studio-amf"
-    - su user -c "yes '' | makepkg --noconfirm -s"
+  #build_obs_studio_amf_script:
+  #  - cd ..
+  #  - echo "Clonning obs-studio-amf from AUR"
+  #  - git clone https://aur.archlinux.org/obs-studio-amf.git
+  #  - cd obs-studio-amf
+  #  - pacman -Syu --noconfirm base-devel sudo schedtool
+  #  - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+  #  - chown user -R ..
+  #  - chown user -R /tmp
+  #  - echo "Build obs-studio-amf"
+  #  - su user -c "yes '' | makepkg --noconfirm -s"
 
   build_startwine_script:
     - cd ..
