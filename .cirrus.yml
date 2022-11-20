@@ -330,16 +330,16 @@ update_hl_soft_task:
   install_git_script:
     - pacman -Syu --noconfirm git
 
-  build_asusctl_script:
-    - echo "Clone asusctl from AUR"
-    - git clone https://aur.archlinux.org/asusctl.git
-    - cd asusctl
-    - pacman -Syu --noconfirm base-devel sudo schedtool
-    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
-    - chown user -R ..
-    - chown user -R /tmp
-    - echo "Build asusctl"
-    - su user -c "yes '' | makepkg --noconfirm -s"
+  #build_asusctl_script:
+  #  - echo "Clone asusctl from AUR"
+  #  - git clone https://aur.archlinux.org/asusctl.git
+  #  - cd asusctl
+  #  - pacman -Syu --noconfirm base-devel sudo schedtool
+  #  - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+  #  - chown user -R ..
+  #  - chown user -R /tmp
+  #  - echo "Build asusctl"
+  #  - su user -c "yes '' | makepkg --noconfirm -s"
 
   build_discord_screenaudio_script:
     - cd ..
