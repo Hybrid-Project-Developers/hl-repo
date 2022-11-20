@@ -22,7 +22,7 @@ update_hl_core_task:
 
   build_calamares_hybrid_script:
     - cd ../..
-    - cd Hybrid-Linux-PKGBUILDs/calamares-hybrid
+    - cd Hybrid-Linux-PKGBUILDs/calamares-hybrid/
     - pacman -Syu --noconfirm base-devel sudo schedtool
     - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
     - chown user -R ..
