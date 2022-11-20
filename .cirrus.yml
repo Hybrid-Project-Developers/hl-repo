@@ -6,8 +6,8 @@ update_hl_core_task:
   env:
     PKGDEST: /tmp/hl-core
 
-  install_git_script:
-    - pacman -Syu --noconfirm git
+  install_deps_script:
+    - pacman -Syu --noconfirm git coreutils
 
   build_mirrorlists_script:
     - echo "Checkout PKGBUILDs Repo"
@@ -22,6 +22,7 @@ update_hl_core_task:
 
   build_calamares_hybrid_script:
     - cd ../..
+    - pwd
     - cd Hybrid-Linux-PKGBUILDs/calamares-hybrid/
     - pacman -Syu --noconfirm base-devel sudo schedtool
     - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
@@ -55,8 +56,8 @@ update_hl_additions_task:
   env:
     PKGDEST: /tmp/hl-additions
 
-  install_git_script:
-    - pacman -Syu --noconfirm git
+  install_deps_script:
+    - pacman -Syu --noconfirm git coreutils
 
   build_amdgpu_opencl_switcher_script:
     - echo "Checkout PKGBUILDs Repo"
@@ -71,6 +72,7 @@ update_hl_additions_task:
   
   build_amdgpu_vulkan_switcher_script:
     - cd ..
+    - pwd
     - cd amdgpu-vulkan-switcher
     - pacman -Syu --noconfirm base-devel sudo schedtool
     - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
@@ -128,8 +130,8 @@ update_hl_drivers_task:
   env:
     PKGDEST: /tmp/hl-drivers
   
-  install_git_script:
-    - pacman -Syu --noconfirm git
+  install_deps_script:
+    - pacman -Syu --noconfirm git coreutils
 
   build_amf_amdgpu_pro_fix_script:
     - echo "Checkout amf-amdgpu-pro-fix AUR Repo"
@@ -265,8 +267,8 @@ update_hl_multilib_task:
   env:
     PKGDEST: /tmp/hl-multilib
   
-  install_git_script:
-    - pacman -Syu --noconfirm git
+  install_deps_script:
+    - pacman -Syu --noconfirm git coreutils
 
   build_amf_amdgpu_pro_fix_script:
     - echo "Checkout amf-amdgpu-pro-fix AUR Repo"
@@ -306,8 +308,8 @@ update_hl_soft_task:
   env:
     PKGDEST: /tmp/hl-soft
 
-  install_git_script:
-    - pacman -Syu --noconfirm git
+  install_deps_script:
+    - pacman -Syu --noconfirm git coreutils
 
   #build_asusctl_script:
   #  - echo "Clone asusctl from AUR"
