@@ -1,0 +1,343 @@
+update_hl_core_task:
+  container:
+    cpu: 8
+    memory: 16G
+    image: archlinux:latest
+  env:
+    PKGDEST: /tmp/hl-core
+
+  prepare_makepkg_script:
+    - echo "Preparing for makepkg"
+    - pacman -Syu --noconfirm git base-devel sudo schedtool
+    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    - chown user -R ..
+    - chown user -R /tmp
+
+  build_x86_64_mirrorlist_script:
+    - echo "Checkout PKGBUILDs Repo"
+    - git clone https://github.com/Hybrid-Project-Developers/Hybrid-Linux-PKGBUILDs.git
+    - cd Hybrid-Linux-PKGBUILDs/hybrid-mirrorlist
+    - echo "Build Mirrorlist"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  build_x86_64_v2_mirrorlist_script:
+    - cd ../..
+    - cd Hybrid-Linux-PKGBUILDs/hybrid-v2-mirrorlist
+    - echo "Build x86_64v2 Mirrorlist"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  build_x86_64_v3_mirrorlist_script:
+    - cd ../..
+    - cd Hybrid-Linux-PKGBUILDs/hybrid-v3-mirrorlist
+    - echo "Build x86_64v3 Mirrorlist"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  build_calamares_hybrid_script:
+    - cd ../..
+    - cd Hybrid-Linux-PKGBUILDs/calamares-hybrid
+    - echo "Build Calamares"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  upload_pkgs_to_hl_core_script:
+    - echo "Installing Dependencies"
+    - pacman -Syu --noconfirm base-devel sudo wget sshpass
+    - echo "cd to directory"
+    - cd $PKGDEST
+    - echo "Downloading repo-files"
+    - wget https://osdn.net/projects/hybridlinux/storage/hl-core/x86_64/hl-core.db.tar.gz https://osdn.net/projects/hybridlinux/storage/hl-core/x86_64/hl-core.files.tar.gz
+    - echo "Updating Repo..."
+    - sudo repo-add hl-core.db.tar.gz *.pkg.tar.zst
+    - echo "Setting SSH key..."
+    - echo -e "$PRIVATE_SSH_KEY" > /tmp/tmp_id
+    - chmod 600 /tmp/tmp_id
+    - echo "Updating SourceForge Mirror"
+    - scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* $SOURCEFORGE_USERNAME@$SOURCEFORGE_HOST:/home/pfs/project/hybridlinux/Repo/hl-core/x86_64
+    - echo "Updating OSDN Mirror"
+    - scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* $OSDN_USERNAME@$OSDN_HOST:/storage/groups/h/hy/hybridlinux/hl-core/x86_64
+
+update_hl_additions_task:
+  container:
+    cpu: 8
+    memory: 16G
+    image: archlinux:latest
+  env:
+    PKGDEST: /tmp/hl-additions
+
+  prepare_makepkg_script:
+    - echo "Preparing for makepkg"
+    - pacman -Syu --noconfirm git base-devel sudo schedtool
+    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    - chown user -R ..
+    - chown user -R /tmp
+
+  build_amdgpu_opencl_switcher_script:
+    - echo "Checkout PKGBUILDs Repo"
+    - git clone https://github.com/Hybrid-Project-Developers/Hybrid-Linux-PKGBUILDs.git
+    - cd Hybrid-Linux-PKGBUILDs/amdgpu-opencl-swithcer
+    - echo "Build amdgpu-opencl-swithcer"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+  
+  build_amdgpu_vulkan_switcher_script:
+    - echo "Checkout PKGBUILDs Repo"
+    - git clone https://github.com/Hybrid-Project-Developers/Hybrid-Linux-PKGBUILDs.git
+    - cd Hybrid-Linux-PKGBUILDs/amdgpu-vulkan-swithcer
+    - echo "Build amdgpu-vulkan-swithcer"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  build_hidpi_daemon_script:
+    - cd ../..
+    - echo "Clonning hidpi-daemon from AUR"
+    - git clone https://aur.archlinux.org/hidpi-daemon.git
+    - cd hidpi-daemon
+    - echo "Build hidpi-daemon"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  build_nvidia_tweaks_script:
+    - cd ..
+    - echo "Clonning hidpi-daemon from AUR"
+    - git clone https://aur.archlinux.org/hidpi-daemon.git
+    - cd nvidia-tweaks
+    - echo "Build nvidia-tweaks"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  upload_pkgs_to_hl_additions_script:
+    - echo "Installing Dependencies"
+    - pacman -Syu --noconfirm base-devel sudo wget sshpass
+    - echo "cd to directory"
+    - cd $PKGDEST
+    - echo "Downloading repo-files"
+    - wget https://osdn.net/projects/hybridlinux/storage/hl-additions/x86_64/hl-additions.db.tar.gz https://osdn.net/projects/hybridlinux/storage/hl-additions/x86_64/hl-additions.files.tar.gz
+    - echo "Updating Repo..."
+    - sudo repo-add hl-additions.db.tar.gz *.pkg.tar.zst
+    - echo "Setting SSH key..."
+    - echo -e "$PRIVATE_SSH_KEY" > /tmp/tmp_id
+    - chmod 600 /tmp/tmp_id
+    - echo "Updating SourceForge Mirror"
+    - scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* $SOURCEFORGE_USERNAME@$SOURCEFORGE_HOST:/home/pfs/project/hybridlinux/Repo/hl-additions/x86_64
+    - echo "Updating OSDN Mirror"
+    - scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* $OSDN_USERNAME@$OSDN_HOST:/storage/groups/h/hy/hybridlinux/hl-additions/x86_64
+
+update_hl_drivers_task:
+  container:
+    cpu: 8
+    memory: 16G
+    image: archlinux:latest
+  env:
+    PKGDEST: /tmp/hl-drivers
+
+  prepare_makepkg_script:
+    - echo "Preparing for makepkg"
+    - pacman -Syu --noconfirm git base-devel sudo schedtool
+    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    - chown user -R ..
+    - chown user -R /tmp
+
+  build_amf_amdgpu_pro_fix_script:
+    - echo "Checkout amf-amdgpu-pro-fix AUR Repo"
+    - git clone https://aur.archlinux.org/amdgpu-pro-installer-fix.git
+    - cd amdgpu-pro-installer-fix
+    - echo "Build amf-amdgpu-pro-fix"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  build_e1000e_dkms_script:
+    - cd ..
+    - echo "Clonning e1000e-dkms from AUR"
+    - git clone https://aur.archlinux.org/e1000e-dkms.git
+    - cd e1000e-dkms
+    - echo "Build e1000e-dkms"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  build_hid_sony_panic_fix_dkms_script:
+    - cd ..
+    - echo "Clonning hid-sony-panic-fix-dkms from AUR"
+    - git clone https://aur.archlinux.org/hid-sony-panic-fix-dkms.git
+    - cd hid-sony-panic-fix-dkms
+    - echo "Build hid-sony-panic-fix-dkms"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  build_nvidia_390xx_dkms_script:
+    - cd ..
+    - echo "Clonning nvidia-390xx-dkms from Herecura Gitlab"
+    - git clone https://gitlab.com/herecura/packages/nvidia-390xx-dkms.git
+    - cd nvidia-390xx-dkms
+    - echo "Build nvidia-390xx-dkms"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  build_nvidia_390xx_utils_script:
+    - cd ..
+    - echo "Clonning nvidia-390xx-utils from Herecura Gitlab"
+    - git clone https://gitlab.com/herecura/packages/nvidia-390xx-utils.git
+    - cd nvidia-390xx-utils
+    - echo "Build nvidia-390xx-dkms"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  build_nvidia_470xx_dkms_script:
+    - cd ..
+    - echo "Clonning nvidia-470xx-dkms from Herecura Gitlab"
+    - git clone https://gitlab.com/herecura/packages/nvidia-470xx-dkms.git
+    - cd nvidia-390xx-dkms
+    - echo "Build nvidia-390xx-dkms"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  build_nvidia_470xx_utils_script:
+    - cd ..
+    - echo "Clonning nvidia-470xx-utils from Herecura Gitlab"
+    - git clone https://gitlab.com/herecura/packages/nvidia-470xx-utils.git
+    - cd nvidia-390xx-utils
+    - echo "Build nvidia-390xx-dkms"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  build_nvidia_vaapi_driver_git_script:
+    - cd ..
+    - echo "Clonning nvidia-vaapi-driver-git from AUR"
+    - git clone https://aur.archlinux.org/nvidia-vaapi-driver-git.git
+    - cd nvidia-vaapi-driver-git
+    - echo "Build nvidia-vaapi-driver-git"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  build_winesync_script:
+    - cd ..
+    - echo "Clonning winesync from AUR"
+    - git clone https://aur.archlinux.org/winesync.git
+    - cd winesync
+    - echo "Build winesync"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  upload_pkgs_to_hl_drivers_script:
+    - echo "Installing Dependencies"
+    - pacman -Syu --noconfirm base-devel sudo wget sshpass
+    - echo "cd to directory"
+    - cd $PKGDEST
+    - echo "Downloading repo-files"
+    - wget https://osdn.net/projects/hybridlinux/storage/hl-drivers/x86_64/hl-drivers.db.tar.gz https://osdn.net/projects/hybridlinux/storage/hl-drivers/x86_64/hl-drivers.files.tar.gz
+    - echo "Removing multilib packages"
+    - rm -rfv lib32-*.pkg.tar.zst
+    - echo "Updating Repo..."
+    - sudo repo-add hl-drivers.db.tar.gz *.pkg.tar.zst
+    - echo "Setting SSH key..."
+    - echo -e "$PRIVATE_SSH_KEY" > /tmp/tmp_id
+    - chmod 600 /tmp/tmp_id
+    - echo "Updating SourceForge Mirror"
+    - scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* $SOURCEFORGE_USERNAME@$SOURCEFORGE_HOST:/home/pfs/project/hybridlinux/Repo/hl-drivers/x86_64
+    - echo "Updating OSDN Mirror"
+    - scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* $OSDN_USERNAME@$OSDN_HOST:/storage/groups/h/hy/hybridlinux/hl-drivers/x86_64
+
+update_hl_multilib_task:
+  container:
+    cpu: 8
+    memory: 16G
+    image: archlinux:latest
+  env:
+    PKGDEST: /tmp/hl-multilib
+
+  prepare_makepkg_script:
+    - echo "Preparing for makepkg"
+    - pacman -Syu --noconfirm git base-devel sudo schedtool
+    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    - chown user -R ..
+    - chown user -R /tmp
+
+  build_amf_amdgpu_pro_fix_script:
+    - echo "Checkout amf-amdgpu-pro-fix AUR Repo"
+    - git clone https://aur.archlinux.org/amdgpu-pro-installer-fix.git
+    - cd amdgpu-pro-installer-fix
+    - echo "Build amf-amdgpu-pro-fix"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  upload_pkgs_to_hl_multilib_script:
+    - echo "Installing Dependencies"
+    - pacman -Syu --noconfirm base-devel sudo wget sshpass
+    - echo "cd to directory"
+    - cd $PKGDEST
+    - echo "Downloading repo-files"
+    - wget https://osdn.net/projects/hybridlinux/storage/hl-multilib/x86_64/hl-multilib.db.tar.gz https://osdn.net/projects/hybridlinux/storage/hl-multilib/x86_64/hl-multilib.files.tar.gz
+    - echo "Removing non-multilib packages"
+    - rm -rfv amdgpu-pro-libgl-fix*.pkg.tar.zst amf-amdgpu-pro-fix*.pkg.tar.zst vulkan-amdgpu-pro-fix*.pkg.tar.zst
+    - echo "Updating Repo..."
+    - sudo repo-add hl-multilib.db.tar.gz *.pkg.tar.zst
+    - echo "Setting SSH key..."
+    - echo -e "$PRIVATE_SSH_KEY" > /tmp/tmp_id
+    - chmod 600 /tmp/tmp_id
+    - echo "Updating SourceForge Mirror"
+    - scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* $SOURCEFORGE_USERNAME@$SOURCEFORGE_HOST:/home/pfs/project/hybridlinux/Repo/hl-multilib/x86_64
+    - echo "Updating OSDN Mirror"
+    - scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* $OSDN_USERNAME@$OSDN_HOST:/storage/groups/h/hy/hybridlinux/hl-multilib/x86_64
+
+update_hl_soft_task:
+  container:
+    cpu: 8
+    memory: 16G
+    image: archlinux:latest
+  env:
+    PKGDEST: /tmp/hl-soft
+
+  prepare_makepkg_script:
+    - echo "Preparing for makepkg"
+    - pacman -Syu --noconfirm git base-devel sudo schedtool
+    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    - chown user -R ..
+    - chown user -R /tmp
+
+  build_asusctl_script:
+    - echo "Clone asusctl from AUR"
+    - git clone https://aur.archlinux.org/asusctl.git
+    - cd asusctl
+    - echo "Build asusctl"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  build_discord_screenaudio_script:
+    - cd ..
+    - echo "Clonning discord-screenaudio from AUR"
+    - git clone https://aur.archlinux.org/discord-screenaudio.git
+    - cd discord-screenaudio
+    - echo "Build discord-screenaudio"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  build_obs_studio_amf_script:
+    - cd ..
+    - echo "Clonning obs-studio-amf from AUR"
+    - git clone https://aur.archlinux.org/obs-studio-amf.git
+    - cd obs-studio-amf
+    - echo "Build obs-studio-amf"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  build_startwine_script:
+    - cd ..
+    - echo "Checkout PKGBUILDs Repo"
+    - git clone https://github.com/Hybrid-Project-Developers/Hybrid-Linux-PKGBUILDs.git
+    - cd Hybrid-Linux-PKGBUILDs/startwine
+    - echo "Build startwine"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  build_portproton_script:
+    - cd ../..
+    - echo "Clonning portproton from AUR"
+    - git clone https://aur.archlinux.org/portproton.git
+    - cd portproton
+    - echo "Build portproton"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  build_openoffice_bin_script:
+    - cd ..
+    - echo "Clonning portproton from AUR"
+    - git clone https://aur.archlinux.org/openoffice-bin.git
+    - cd openoffice-bin
+    - echo "Build openoffice-bin"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  upload_pkgs_to_hl_soft_script:
+    - echo "Installing Dependencies"
+    - pacman -Syu --noconfirm base-devel sudo wget sshpass
+    - echo "cd to directory"
+    - cd $PKGDEST
+    - echo "Downloading repo-files"
+    - wget https://osdn.net/projects/hybridlinux/storage/hl-soft/x86_64/hl-soft.db.tar.gz https://osdn.net/projects/hybridlinux/storage/hl-soft/x86_64/hl-soft.files.tar.gz
+    - echo "Updating Repo..."
+    - sudo repo-add hl-soft.db.tar.gz *.pkg.tar.zst
+    - echo "Setting SSH key..."
+    - echo -e "$PRIVATE_SSH_KEY" > /tmp/tmp_id
+    - chmod 600 /tmp/tmp_id
+    - echo "Updating SourceForge Mirror"
+    - scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* $SOURCEFORGE_USERNAME@$SOURCEFORGE_HOST:/home/pfs/project/hybridlinux/Repo/hl-soft/x86_64
+    - echo "Updating OSDN Mirror"
+    - scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* $OSDN_USERNAME@$OSDN_HOST:/storage/groups/h/hy/hybridlinux/hl-soft/x86_64
