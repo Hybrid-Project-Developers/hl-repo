@@ -354,7 +354,7 @@ update_hl_soft_task:
     - chown user -R ..
     - chown user -R /tmp
     - echo "Build startwine"
-    - su user -c "yes '' | makepkg --noconfirm -s"
+    - su user -c "yes '' | makepkg --noconfirm --nodeps -s"
 
   build_portproton_script:
     - cd ../..
