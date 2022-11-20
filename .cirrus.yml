@@ -20,14 +20,14 @@ update_hl_core_task:
     - echo "Build Mirrorlist"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
-  build_calamares_hybrid_script:
-    - cd /tmp/cirrus-ci-build/Hybrid-Linux-PKGBUILDs/calamares-hybrid/
-    - pacman -Syu --noconfirm base-devel sudo schedtool
-    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
-    - chown user -R ..
-    - chown user -R /tmp
-    - echo "Build Calamares"
-    - su user -c "yes '' | makepkg --noconfirm -s"
+  #build_calamares_hybrid_script:
+  #  - cd /tmp/cirrus-ci-build/Hybrid-Linux-PKGBUILDs/calamares-hybrid/
+  #  - pacman -Syu --noconfirm base-devel sudo schedtool
+  #  - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+  #  - chown user -R ..
+  #  - chown user -R /tmp
+  #  - echo "Build Calamares"
+  #  - su user -c "yes '' | makepkg --noconfirm -s"
 
   upload_pkgs_to_hl_core_script:
     - echo "Installing Dependencies"
@@ -69,7 +69,7 @@ update_hl_additions_task:
     - su user -c "yes '' | makepkg --noconfirm -s"
   
   build_amdgpu_vulkan_switcher_script:
-    - cd /tmp/cirrus-ci-build/Hybrid-Linux-PKGBUILDs/
+    - cd /tmp/cirrus-ci-build/Hybrid-Linux-PKGBUILDs/amdgpu-vulkan-switcher
     - pacman -Syu --noconfirm base-devel sudo schedtool
     - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
     - chown user -R ..
