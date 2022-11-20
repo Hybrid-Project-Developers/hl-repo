@@ -21,8 +21,8 @@ update_hl_core_task:
     - su user -c "yes '' | makepkg --noconfirm -s"
 
   build_x86_64_v2_mirrorlist_script:
-    - cd ../..
-    - cd Hybrid-Linux-PKGBUILDs/hybrid-v2-mirrorlist
+    - cd ..
+    - cd hybrid-v2-mirrorlist
     - pacman -Syu --noconfirm base-devel sudo schedtool
     - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
     - chown user -R ..
@@ -31,8 +31,8 @@ update_hl_core_task:
     - su user -c "yes '' | makepkg --noconfirm -s"
 
   build_x86_64_v3_mirrorlist_script:
-    - cd ../..
-    - cd Hybrid-Linux-PKGBUILDs/hybrid-v3-mirrorlist
+    - cd ..
+    - cd hybrid-v3-mirrorlist
     - pacman -Syu --noconfirm base-devel sudo schedtool
     - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
     - chown user -R ..
