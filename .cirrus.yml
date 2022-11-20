@@ -6,6 +6,9 @@ update_hl_core_task:
   env:
     PKGDEST: /tmp/hl-core
 
+  install_git_script:
+    - pacman -Syu --noconfirm git
+
   build_x86_64_mirrorlist_script:
     - echo "Checkout PKGBUILDs Repo"
     - git clone https://github.com/Hybrid-Project-Developers/Hybrid-Linux-PKGBUILDs.git
@@ -71,6 +74,9 @@ update_hl_additions_task:
     image: archlinux:latest
   env:
     PKGDEST: /tmp/hl-additions
+
+  install_git_script:
+    - pacman -Syu --noconfirm git
 
   build_amdgpu_opencl_switcher_script:
     - echo "Checkout PKGBUILDs Repo"
@@ -142,13 +148,9 @@ update_hl_drivers_task:
     image: archlinux:latest
   env:
     PKGDEST: /tmp/hl-drivers
-
-  prepare_makepkg_script:
-    - echo "Preparing for makepkg"
-    - pacman -Syu --noconfirm git base-devel sudo schedtool
-    - useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-    - chown user -R ..
-    - chown user -R /tmp
+  
+  install_git_script:
+    - pacman -Syu --noconfirm git
 
   build_amf_amdgpu_pro_fix_script:
     - echo "Checkout amf-amdgpu-pro-fix AUR Repo"
@@ -283,13 +285,9 @@ update_hl_multilib_task:
     image: archlinux:latest
   env:
     PKGDEST: /tmp/hl-multilib
-
-  prepare_makepkg_script:
-    - echo "Preparing for makepkg"
-    - pacman -Syu --noconfirm git base-devel sudo schedtool
-    - useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-    - chown user -R ..
-    - chown user -R /tmp
+  
+  install_git_script:
+    - pacman -Syu --noconfirm git
 
   build_amf_amdgpu_pro_fix_script:
     - echo "Checkout amf-amdgpu-pro-fix AUR Repo"
@@ -329,12 +327,8 @@ update_hl_soft_task:
   env:
     PKGDEST: /tmp/hl-soft
 
-  prepare_makepkg_script:
-    - echo "Preparing for makepkg"
-    - pacman -Syu --noconfirm git base-devel sudo schedtool
-    - useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-    - chown user -R ..
-    - chown user -R /tmp
+  install_git_script:
+    - pacman -Syu --noconfirm git
 
   build_asusctl_script:
     - echo "Clone asusctl from AUR"
