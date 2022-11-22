@@ -380,7 +380,7 @@ update_hl_drivers_v2_task:
     - cd /tmp/cirrus-ci-build/
     - echo "Clonning Mesa-TKG Repo from Github"
     - git clone https://github.com/Frogging-Family/mesa-git.git
-    - cd mesa-tkg
+    - cd mesa-git
     - pacman -Syu --noconfirm base-devel sudo schedtool
     - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
     - chown user -R ..
@@ -531,7 +531,7 @@ update_hl_drivers_v3_task:
   - cd /tmp/cirrus-ci-build/
   - echo "Clonning Mesa-TKG Repo from Github"
   - git clone https://github.com/Frogging-Family/mesa-git.git
-  - cd mesa-tkg
+  - cd mesa-git
   - pacman -Syu --noconfirm base-devel sudo schedtool
   - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
   - chown user -R ..
@@ -626,7 +626,7 @@ update_hl_multilib_v2_task:
     - cd /tmp/cirrus-ci-build/
     - echo "Clonning Mesa-TKG Repo from Github"
     - git clone https://github.com/Frogging-Family/mesa-git.git
-    - cd mesa-tkg
+    - cd mesa-git
     - pacman -Syu --noconfirm base-devel sudo schedtool
     - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
     - chown user -R ..
@@ -680,7 +680,7 @@ update_hl_multilib_v3_task:
     - cd /tmp/cirrus-ci-build/
     - echo "Clonning Mesa-TKG Repo from Github"
     - git clone https://github.com/Frogging-Family/mesa-git.git
-    - cd mesa-tkg
+    - cd mesa-git
     - pacman -Syu --noconfirm base-devel sudo schedtool
     - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
     - chown user -R ..
