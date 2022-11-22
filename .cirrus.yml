@@ -376,6 +376,18 @@ update_hl_drivers_v2_task:
     - echo "Build winesync"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
+  build_mesa_tkg_v2_script:
+    - cd /tmp/cirrus-ci-build/
+    - echo "Clonning Mesa-TKG Repo from Github"
+    - git clone https://github.com/Frogging-Family/mesa-git.git
+    - cd mesa-tkg
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    - chown user -R ..
+    - chown user -R /tmp
+    - echo "Building mesa-tkg"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
   upload_pkgs_to_hl_drivers_v2_script:
     - echo "Installing Dependencies"
     - pacman -Syu --noconfirm base-devel sudo wget sshpass
@@ -515,7 +527,19 @@ update_hl_drivers_v3_task:
     - echo "Build winesync"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
-  upload_pkgs_to_hl_drivers_v2_script:
+  build_mesa_tkg_v3_script:
+  - cd /tmp/cirrus-ci-build/
+  - echo "Clonning Mesa-TKG Repo from Github"
+  - git clone https://github.com/Frogging-Family/mesa-git.git
+  - cd mesa-tkg
+  - pacman -Syu --noconfirm base-devel sudo schedtool
+  - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+  - chown user -R ..
+  - chown user -R /tmp
+  - echo "Building mesa-tkg"
+  - su user -c "yes '' | makepkg --noconfirm -s"
+
+  upload_pkgs_to_hl_drivers_v3_script:
     - echo "Installing Dependencies"
     - pacman -Syu --noconfirm base-devel sudo wget sshpass
     - echo "cd to directory"
@@ -564,7 +588,7 @@ update_hl_multilib_task:
     - echo "Downloading repo-files"
     - wget https://osdn.net/projects/hybridlinux/storage/hl-multilib/x86_64/hl-multilib.db.tar.gz https://osdn.net/projects/hybridlinux/storage/hl-multilib/x86_64/hl-multilib.files.tar.gz
     - echo "Removing non-multilib packages"
-    - rm -rfv amdgpu-pro-libgl-fix*.pkg.tar.zst amf-amdgpu-pro-fix*.pkg.tar.zst vulkan-amdgpu-pro-fix*.pkg.tar.zst
+    - rm -rfv amdgpu-pro-libgl-fix*.pkg.tar.zst amf-amdgpu-pro-fix*.pkg.tar.zst vulkan-amdgpu-pro-fix*.pkg.tar.zst mesa-tkg-git*.pkg.tar.zst
     - echo "Updating Repo..."
     - sudo repo-add hl-multilib.db.tar.gz *.pkg.tar.zst
     - echo "Setting SSH key..."
@@ -574,6 +598,114 @@ update_hl_multilib_task:
     - scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* $SOURCEFORGE_USERNAME@$SOURCEFORGE_HOST:/home/pfs/project/hybridlinux/Repo/hl-multilib/x86_64
     - echo "Updating OSDN Mirror"
     - scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* $OSDN_USERNAME@$OSDN_HOST:/storage/groups/h/hy/hybridlinux/hl-multilib/x86_64
+
+update_hl_multilib_v2_task:
+  container:
+    cpu: 4
+    memory: 16G
+    image: archlinux:latest
+  env:
+    PKGDEST: /tmp/hl-multilib
+    CFLAGS: "-march=x86-64-v2 -O2 -pipe -fno-plt -fexceptions -Wp,-D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -fstack-clash-protection -fcf-protection"
+  
+  install_deps_script:
+    - pacman -Syu --noconfirm git coreutils
+
+  build_amf_amdgpu_pro_fix_script:
+    - echo "Checkout amf-amdgpu-pro-fix AUR Repo"
+    - git clone https://aur.archlinux.org/amdgpu-pro-installer-fix.git
+    - cd amdgpu-pro-installer-fix
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    - chown user -R ..
+    - chown user -R /tmp
+    - echo "Build amf-amdgpu-pro-fix"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  build_mesa_tkg_v2_script:
+    - cd /tmp/cirrus-ci-build/
+    - echo "Clonning Mesa-TKG Repo from Github"
+    - git clone https://github.com/Frogging-Family/mesa-git.git
+    - cd mesa-tkg
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    - chown user -R ..
+    - chown user -R /tmp
+    - echo "Building mesa-tkg"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  upload_pkgs_to_hl_multilib_v2_script:
+    - echo "Installing Dependencies"
+    - pacman -Syu --noconfirm base-devel sudo wget sshpass
+    - echo "cd to directory"
+    - cd $PKGDEST
+    - echo "Downloading repo-files"
+    #- wget https://osdn.net/projects/hybridlinux/storage/hl-multilib/x86_64/hl-multilib.db.tar.gz https://osdn.net/projects/hybridlinux/storage/hl-multilib/x86_64/hl-multilib.files.tar.gz
+    #- echo "Removing non-multilib packages"
+    - rm -rfv amdgpu-pro-libgl-fix*.pkg.tar.zst amf-amdgpu-pro-fix*.pkg.tar.zst vulkan-amdgpu-pro-fix*.pkg.tar.zst
+    - echo "Updating Repo..."
+    - sudo repo-add hl-multilib.db.tar.gz *.pkg.tar.zst
+    - echo "Setting SSH key..."
+    - echo -e "$PRIVATE_SSH_KEY" > /tmp/tmp_id
+    - chmod 600 /tmp/tmp_id
+    - echo "Updating SourceForge Mirror"
+    - scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* $SOURCEFORGE_USERNAME@$SOURCEFORGE_HOST:/home/pfs/project/hybridlinux/Repo/hl-multilib-v2/x86_64_v2
+    - echo "Updating OSDN Mirror"
+    - scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* $OSDN_USERNAME@$OSDN_HOST:/storage/groups/h/hy/hybridlinux/hl-multilib-v2/x86_64_v2
+
+update_hl_multilib_v3_task:
+  container:
+    cpu: 4
+    memory: 16G
+    image: archlinux:latest
+  env:
+    PKGDEST: /tmp/hl-multilib
+    CFLAGS: "-march=x86-64-v3 -O2 -pipe -fno-plt -fexceptions -Wp,-D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -fstack-clash-protection -fcf-protection"
+  
+  install_deps_script:
+    - pacman -Syu --noconfirm git coreutils
+
+  build_amf_amdgpu_pro_fix_script:
+    - echo "Checkout amf-amdgpu-pro-fix AUR Repo"
+    - git clone https://aur.archlinux.org/amdgpu-pro-installer-fix.git
+    - cd amdgpu-pro-installer-fix
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    - chown user -R ..
+    - chown user -R /tmp
+    - echo "Build amf-amdgpu-pro-fix"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  build_mesa_tkg_v2_script:
+    - cd /tmp/cirrus-ci-build/
+    - echo "Clonning Mesa-TKG Repo from Github"
+    - git clone https://github.com/Frogging-Family/mesa-git.git
+    - cd mesa-tkg
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    - chown user -R ..
+    - chown user -R /tmp
+    - echo "Building mesa-tkg"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  upload_pkgs_to_hl_multilib_v3_script:
+    - echo "Installing Dependencies"
+    - pacman -Syu --noconfirm base-devel sudo wget sshpass
+    - echo "cd to directory"
+    - cd $PKGDEST
+  #  - echo "Downloading repo-files"
+  #  - wget https://osdn.net/projects/hybridlinux/storage/hl-multilib/x86_64/hl-multilib.db.tar.gz https://osdn.net/projects/hybridlinux/storage/hl-multilib/x86_64/hl-multilib.files.tar.gz
+    - echo "Removing non-multilib packages"
+    - rm -rfv amdgpu-pro-libgl-fix*.pkg.tar.zst amf-amdgpu-pro-fix*.pkg.tar.zst vulkan-amdgpu-pro-fix*.pkg.tar.zst
+    - echo "Updating Repo..."
+    - sudo repo-add hl-multilib.db.tar.gz *.pkg.tar.zst
+    - echo "Setting SSH key..."
+    - echo -e "$PRIVATE_SSH_KEY" > /tmp/tmp_id
+    - chmod 600 /tmp/tmp_id
+    - echo "Updating SourceForge Mirror"
+    - scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* $SOURCEFORGE_USERNAME@$SOURCEFORGE_HOST:/home/pfs/project/hybridlinux/Repo/hl-multilib-v3/x86_64_v3
+    - echo "Updating OSDN Mirror"
+    - scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* $OSDN_USERNAME@$OSDN_HOST:/storage/groups/h/hy/hybridlinux/hl-multilib-v3/x86_64_v3
 
 update_hl_soft_task:
   container:
