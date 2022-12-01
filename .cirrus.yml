@@ -398,7 +398,7 @@ update_hl_drivers_v2_task:
     - echo "Removing multilib packages"
     - rm -rfv lib32-*.pkg.tar.zst
     - echo "Updating Repo..."
-    - sudo repo-add hl-drivers.db.tar.gz *.pkg.tar.zst
+    - sudo repo-add hl-drivers-v2.db.tar.gz *.pkg.tar.zst
     - echo "Setting SSH key..."
     - echo -e "$PRIVATE_SSH_KEY" > /tmp/tmp_id
     - chmod 600 /tmp/tmp_id
@@ -549,7 +549,7 @@ update_hl_drivers_v3_task:
     - echo "Removing multilib packages"
     - rm -rfv lib32-*.pkg.tar.zst
     - echo "Updating Repo..."
-    - sudo repo-add hl-drivers.db.tar.gz *.pkg.tar.zst
+    - sudo repo-add hl-drivers-v3.db.tar.gz *.pkg.tar.zst
     - echo "Setting SSH key..."
     - echo -e "$PRIVATE_SSH_KEY" > /tmp/tmp_id
     - chmod 600 /tmp/tmp_id
@@ -642,7 +642,7 @@ update_hl_multilib_v2_task:
     - echo "Downloading repo-files"
     #- wget https://osdn.net/projects/hybridlinux/storage/hl-multilib/x86_64/hl-multilib.db.tar.gz https://osdn.net/projects/hybridlinux/storage/hl-multilib/x86_64/hl-multilib.files.tar.gz
     #- echo "Removing non-multilib packages"
-    - rm -rfv amdgpu-pro-libgl-fix*.pkg.tar.zst amf-amdgpu-pro-fix*.pkg.tar.zst vulkan-amdgpu-pro-fix*.pkg.tar.zst
+    - rm -rfv amdgpu-pro-libgl-fix*.pkg.tar.zst amf-amdgpu-pro-fix*.pkg.tar.zst vulkan-amdgpu-pro-fix*.pkg.tar.zst mesa-tkg-git*.pkg.tar.zst
     - echo "Updating Repo..."
     - sudo repo-add hl-multilib.db.tar.gz *.pkg.tar.zst
     - echo "Setting SSH key..."
@@ -676,7 +676,7 @@ update_hl_multilib_v3_task:
     - echo "Build amf-amdgpu-pro-fix"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
-  build_mesa_tkg_v2_script:
+  build_mesa_tkg_v3_script:
     - cd /tmp/cirrus-ci-build/
     - echo "Clonning Mesa-TKG Repo from Github"
     - git clone https://github.com/Frogging-Family/mesa-git.git
@@ -696,9 +696,9 @@ update_hl_multilib_v3_task:
   #  - echo "Downloading repo-files"
   #  - wget https://osdn.net/projects/hybridlinux/storage/hl-multilib/x86_64/hl-multilib.db.tar.gz https://osdn.net/projects/hybridlinux/storage/hl-multilib/x86_64/hl-multilib.files.tar.gz
     - echo "Removing non-multilib packages"
-    - rm -rfv amdgpu-pro-libgl-fix*.pkg.tar.zst amf-amdgpu-pro-fix*.pkg.tar.zst vulkan-amdgpu-pro-fix*.pkg.tar.zst
+    - rm -rfv amdgpu-pro-libgl-fix*.pkg.tar.zst amf-amdgpu-pro-fix*.pkg.tar.zst vulkan-amdgpu-pro-fix*.pkg.tar.zst mesa-tkg-git*.pkg.tar.zst
     - echo "Updating Repo..."
-    - sudo repo-add hl-multilib.db.tar.gz *.pkg.tar.zst
+    - sudo repo-add hl-multilib-v3.db.tar.gz *.pkg.tar.zst
     - echo "Setting SSH key..."
     - echo -e "$PRIVATE_SSH_KEY" > /tmp/tmp_id
     - chmod 600 /tmp/tmp_id
