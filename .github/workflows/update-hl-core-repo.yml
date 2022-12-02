@@ -1,0 +1,167 @@
+name: "hl-core Repository Update"
+on:
+  schedule:
+    - cron: '5 8 * * 7'
+
+jobs:
+  build-mirrorlists:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    env:
+      PKGDEST: /tmp/hl-core
+      repo: "hl-core"
+      arch_repo: "x86_64"
+
+    steps:
+      - name: "Checkout PKGBUILDs"
+        run: |
+            git clone https://github.com/Hybrid-Project-Developers/Hybrid-Linux-PKGBUILDs.git
+            cd Hybrid-Linux-PKGBUILDs/hybrid-mirrorlist
+
+      - name: "Prepare for makepkg"
+        run: |
+            pacman -Syu --noconfirm base-devel sudo wget sshpass
+            useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            chown user -R ..
+            chown user -R /tmp
+            sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
+            sed -i 's/#GPGKEY=""/GPGKEY="${{ secrets.GPG_KEY }}"/g' /etc/makepkg.conf
+      
+      - name: "Build Mirrorlist"
+        run: |
+            su user -c "yes '' | makepkg --noconfirm -s"
+      
+      - name: "Upload to repo"
+        run: |
+            cd $PKGDEST
+            wget https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.db.tar.gz https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.files.tar.gz
+            sudo repo-add $repo.db.tar.gz *.pkg.tar.zst
+            echo -e "${{ secrets.PRIVATE_SSH_KEY }}" > /tmp/tmp_id
+            chmod 600 /tmp/tmp_id
+            echo "Upload to SourceForge Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.SOURCEFORGE_USERNAME }}@${{ secrets.SOURCEFORGE_HOST }}:/home/pfs/project/hybridlinux/Repo/$repo/$arch_repo
+            echo "Upload to OSDN Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.OSDN_USERNAME }}@${{ secrets.OSDN_HOST }}:/storage/groups/h/hy/hybridlinux/$repo/$arch_repo
+
+  build-calamares:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    env:
+      PKGDEST: /tmp/hl-core
+      repo: "hl-core"
+      arch_repo: "x86_64"
+
+    needs: [ build_mirrorlists ]
+
+    steps:
+      - name: "Checkout PKGBUILDs"
+        run: |
+            git clone https://github.com/Hybrid-Project-Developers/Hybrid-Linux-PKGBUILDs.git
+            cd Hybrid-Linux-PKGBUILDs/calamares-hybrid
+
+      - name: "Prepare for makepkg"
+        run: |
+            pacman -Syu --noconfirm base-devel sudo wget sshpass
+            useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            chown user -R ..
+            chown user -R /tmp
+            sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
+            sed -i 's/#GPGKEY=""/GPGKEY="${{ secrets.GPG_KEY }}"/g' /etc/makepkg.conf
+      
+      - name: "Build Calamares"
+        run: |
+            su user -c "yes '' | makepkg --noconfirm -s"
+      
+      - name: "Upload to repo"
+        run: |
+            cd $PKGDEST
+            wget https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.db.tar.gz https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.files.tar.gz
+            sudo repo-add $repo.db.tar.gz *.pkg.tar.zst
+            echo -e "${{ secrets.PRIVATE_SSH_KEY }}" > /tmp/tmp_id
+            chmod 600 /tmp/tmp_id
+            echo "Upload to SourceForge Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.SOURCEFORGE_USERNAME }}@${{ secrets.SOURCEFORGE_HOST }}:/home/pfs/project/hybridlinux/Repo/$repo/$arch_repo
+            echo "Upload to OSDN Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.OSDN_USERNAME }}@${{ secrets.OSDN_HOST }}:/storage/groups/h/hy/hybridlinux/$repo/$arch_repo
+
+  build-neofetch-hybrid:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    env:
+      PKGDEST: /tmp/hl-core
+      repo: "hl-core"
+      arch_repo: "x86_64"
+
+    needs: [ build-calamares ]
+
+    steps:
+      - name: "Checkout PKGBUILDs"
+        run: |
+            git clone https://github.com/Hybrid-Project-Developers/Hybrid-Linux-PKGBUILDs.git
+            cd Hybrid-Linux-PKGBUILDs/neofetch-hybrid
+
+      - name: "Prepare for makepkg"
+        run: |
+            pacman -Syu --noconfirm base-devel sudo wget sshpass
+            useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            chown user -R ..
+            chown user -R /tmp
+            sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
+            sed -i 's/#GPGKEY=""/GPGKEY="${{ secrets.GPG_KEY }}"/g' /etc/makepkg.conf
+      
+      - name: "Build Neofetch"
+        run: |
+            su user -c "yes '' | makepkg --noconfirm -s"
+      
+      - name: "Upload to repo"
+        run: |
+            cd $PKGDEST
+            wget https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.db.tar.gz https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.files.tar.gz
+            sudo repo-add $repo.db.tar.gz *.pkg.tar.zst
+            echo -e "${{ secrets.PRIVATE_SSH_KEY }}" > /tmp/tmp_id
+            chmod 600 /tmp/tmp_id
+            echo "Upload to SourceForge Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.SOURCEFORGE_USERNAME }}@${{ secrets.SOURCEFORGE_HOST }}:/home/pfs/project/hybridlinux/Repo/$repo/$arch_repo
+            echo "Upload to OSDN Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.OSDN_USERNAME }}@${{ secrets.OSDN_HOST }}:/storage/groups/h/hy/hybridlinux/$repo/$arch_repo
+
+  build-lsb-release-hybrid:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    env:
+      PKGDEST: /tmp/hl-core
+      repo: "hl-core"
+      arch_repo: "x86_64"
+
+    needs: [ build-calamares ]
+
+    steps:
+      - name: "Checkout PKGBUILDs"
+        run: |
+            git clone https://github.com/Hybrid-Project-Developers/Hybrid-Linux-PKGBUILDs.git
+            cd Hybrid-Linux-PKGBUILDs/lsb-release-hybrid
+
+      - name: "Prepare for makepkg"
+        run: |
+            pacman -Syu --noconfirm base-devel sudo wget sshpass
+            useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            chown user -R ..
+            chown user -R /tmp
+            sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
+            sed -i 's/#GPGKEY=""/GPGKEY="${{ secrets.GPG_KEY }}"/g' /etc/makepkg.conf
+      
+      - name: "Build LSB-Release"
+        run: |
+            su user -c "yes '' | makepkg --noconfirm -s"
+      
+      - name: "Upload to repo"
+        run: |
+            cd $PKGDEST
+            wget https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.db.tar.gz https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.files.tar.gz
+            sudo repo-add $repo.db.tar.gz *.pkg.tar.zst
+            echo -e "${{ secrets.PRIVATE_SSH_KEY }}" > /tmp/tmp_id
+            chmod 600 /tmp/tmp_id
+            echo "Upload to SourceForge Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.SOURCEFORGE_USERNAME }}@${{ secrets.SOURCEFORGE_HOST }}:/home/pfs/project/hybridlinux/Repo/$repo/$arch_repo
+            echo "Upload to OSDN Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.OSDN_USERNAME }}@${{ secrets.OSDN_HOST }}:/storage/groups/h/hy/hybridlinux/$repo/$arch_repo

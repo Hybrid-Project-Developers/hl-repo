@@ -1,0 +1,219 @@
+name: "hl-soft Repository Update"
+on:
+  schedule:
+    - cron: '5 8 * * 7'
+
+jobs:
+  build-asusctl-and-rog-control-center:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    env:
+      PKGDEST: /tmp/hl-soft
+      repo: "hl-soft"
+      arch_repo: "x86_64"
+
+    steps:
+      - name: "Checkout PKGBUILDs from AUR"
+        run: |
+            git clone https://aur.archlinux.org/asusctl.git
+            cd asusctl
+
+      - name: "Prepare for makepkg"
+        run: |
+            pacman -Syu --noconfirm base-devel sudo wget sshpass
+            useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            chown user -R ..
+            chown user -R /tmp
+            chown user -R $HOME
+            sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
+            sed -i 's/#GPGKEY=""/GPGKEY="${{ secrets.GPG_KEY }}"/g' /etc/makepkg.conf
+      
+      - name: "Build asusctl"
+        run: |
+            su user -c "yes '' | makepkg --noconfirm -s"
+      
+      - name: "Upload to repo"
+        run: |
+            cd $PKGDEST
+            sudo repo-add $repo.db.tar.gz *.pkg.tar.zst
+            echo -e "${{ secrets.PRIVATE_SSH_KEY }}" > /tmp/tmp_id
+            chmod 600 /tmp/tmp_id
+            echo "Upload to SourceForge Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.SOURCEFORGE_USERNAME }}@${{ secrets.SOURCEFORGE_HOST }}:/home/pfs/project/hybridlinux/Repo/$repo/$arch_repo
+            echo "Upload to OSDN Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.OSDN_USERNAME }}@${{ secrets.OSDN_HOST }}:/storage/groups/h/hy/hybridlinux/$repo/$arch_repo
+
+  build-obs-studio-amf:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    env:
+      PKGDEST: /tmp/hl-soft
+      repo: "hl-soft"
+      arch_repo: "x86_64"
+
+    needs: [ build-asusctl-and-rog-control-center ]
+
+    steps:
+      - name: "Checkout PKGBUILDs from AUR"
+        run: |
+            git clone https://aur.archlinux.org/obs-studio-amf.git
+            cd obs-studio-amf
+
+      - name: "Prepare for makepkg"
+        run: |
+            pacman -Syu --noconfirm base-devel sudo wget sshpass
+            useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            chown user -R ..
+            chown user -R /tmp
+            sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
+            sed -i 's/#GPGKEY=""/GPGKEY="${{ secrets.GPG_KEY }}"/g' /etc/makepkg.conf
+      
+      - name: "Prepare for build"
+        run: |
+            cd ..
+            git clone https://aur.archlinux.org/yay-bin.git
+            cd yay-bin
+            chown user -R ..
+            su user -c "yes '' | makepkg --noconfirm -si"
+            cd ..
+            yay -S --noconfirm amf-amdgpu-pro-fix
+            cd obs-studio-amf
+      
+      - name: "Build OBS Studio"
+        run: |
+            su user -c "yes '' | makepkg --noconfirm -s"
+      
+      - name: "Upload to repo"
+        run: |
+            cd $PKGDEST
+            wget https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.db.tar.gz https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.files.tar.gz
+            sudo repo-add $repo.db.tar.gz *.pkg.tar.zst
+            echo -e "${{ secrets.PRIVATE_SSH_KEY }}" > /tmp/tmp_id
+            chmod 600 /tmp/tmp_id
+            echo "Upload to SourceForge Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.SOURCEFORGE_USERNAME }}@${{ secrets.SOURCEFORGE_HOST }}:/home/pfs/project/hybridlinux/Repo/$repo/$arch_repo
+            echo "Upload to OSDN Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.OSDN_USERNAME }}@${{ secrets.OSDN_HOST }}:/storage/groups/h/hy/hybridlinux/$repo/$arch_repo
+
+  build-startwine:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    env:
+      PKGDEST: /tmp/hl-soft
+      repo: "hl-soft"
+      arch_repo: "x86_64"
+
+    needs: [ build-obs-studio-amf ]
+
+    steps:
+      - name: "Checkout PKGBUILDs"
+        run: |
+            git clone https://github.com/Hybrid-Project-Developers/Hybrid-Linux-PKGBUILDs.git
+            cd Hybrid-Linux-PKGBUILDs/startwine
+
+      - name: "Prepare for makepkg"
+        run: |
+            pacman -Syu --noconfirm base-devel sudo wget sshpass
+            useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            chown user -R ..
+            chown user -R /tmp
+            sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
+            sed -i 's/#GPGKEY=""/GPGKEY="${{ secrets.GPG_KEY }}"/g' /etc/makepkg.conf
+      
+      - name: "Build Startwine"
+        run: |
+            su user -c "yes '' | makepkg --noconfirm -s"
+      
+      - name: "Upload to repo"
+        run: |
+            cd $PKGDEST
+            wget https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.db.tar.gz https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.files.tar.gz
+            sudo repo-add $repo.db.tar.gz *.pkg.tar.zst
+            echo -e "${{ secrets.PRIVATE_SSH_KEY }}" > /tmp/tmp_id
+            chmod 600 /tmp/tmp_id
+            echo "Upload to SourceForge Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.SOURCEFORGE_USERNAME }}@${{ secrets.SOURCEFORGE_HOST }}:/home/pfs/project/hybridlinux/Repo/$repo/$arch_repo
+            echo "Upload to OSDN Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.OSDN_USERNAME }}@${{ secrets.OSDN_HOST }}:/storage/groups/h/hy/hybridlinux/$repo/$arch_repo
+
+  build-openoffice-bin:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    env:
+      PKGDEST: /tmp/hl-soft
+      repo: "hl-soft"
+      arch_repo: "x86_64"
+
+    needs: [ build-startwine ]
+
+    steps:
+      - name: "Checkout PKGBUILDs from AUR"
+        run: |
+            git clone https://aur.archlinux.org/openoffice-bin.git
+            cd openoffice-bin
+
+      - name: "Prepare for makepkg"
+        run: |
+            pacman -Syu --noconfirm base-devel sudo wget sshpass
+            useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            chown user -R ..
+            chown user -R /tmp
+            sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
+            sed -i 's/#GPGKEY=""/GPGKEY="${{ secrets.GPG_KEY }}"/g' /etc/makepkg.conf
+      
+      - name: "Build OpenOffice"
+        run: |
+            su user -c "yes '' | makepkg --noconfirm -s"
+      
+      - name: "Upload to repo"
+        run: |
+            cd $PKGDEST
+            wget https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.db.tar.gz https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.files.tar.gz
+            sudo repo-add $repo.db.tar.gz *.pkg.tar.zst
+            echo -e "${{ secrets.PRIVATE_SSH_KEY }}" > /tmp/tmp_id
+            chmod 600 /tmp/tmp_id
+            echo "Upload to SourceForge Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.SOURCEFORGE_USERNAME }}@${{ secrets.SOURCEFORGE_HOST }}:/home/pfs/project/hybridlinux/Repo/$repo/$arch_repo
+            echo "Upload to OSDN Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.OSDN_USERNAME }}@${{ secrets.OSDN_HOST }}:/storage/groups/h/hy/hybridlinux/$repo/$arch_repo
+
+  build-portproton:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    env:
+      PKGDEST: /tmp/hl-soft
+      repo: "hl-soft"
+      arch_repo: "x86_64"
+
+    needs: [ build-openoffice-bin ]
+
+    steps:
+      - name: "Checkout PKGBUILDs from AUR"
+        run: |
+            git clone https://aur.archlinux.org/portproton.git
+            cd openoffice-bin
+
+      - name: "Prepare for makepkg"
+        run: |
+            pacman -Syu --noconfirm base-devel sudo wget sshpass
+            useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            chown user -R ..
+            chown user -R /tmp
+            sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
+            sed -i 's/#GPGKEY=""/GPGKEY="${{ secrets.GPG_KEY }}"/g' /etc/makepkg.conf
+      
+      - name: "Build PortProton"
+        run: |
+            su user -c "yes '' | makepkg --noconfirm -s"
+      
+      - name: "Upload to repo"
+        run: |
+            cd $PKGDEST
+            wget https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.db.tar.gz https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.files.tar.gz
+            sudo repo-add $repo.db.tar.gz *.pkg.tar.zst
+            echo -e "${{ secrets.PRIVATE_SSH_KEY }}" > /tmp/tmp_id
+            chmod 600 /tmp/tmp_id
+            echo "Upload to SourceForge Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.SOURCEFORGE_USERNAME }}@${{ secrets.SOURCEFORGE_HOST }}:/home/pfs/project/hybridlinux/Repo/$repo/$arch_repo
+            echo "Upload to OSDN Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.OSDN_USERNAME }}@${{ secrets.OSDN_HOST }}:/storage/groups/h/hy/hybridlinux/$repo/$arch_repo

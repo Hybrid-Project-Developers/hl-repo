@@ -1,0 +1,167 @@
+name: "hl-additions Repository Update"
+on:
+  schedule:
+    - cron: '5 8 * * 7'
+
+jobs:
+  build-amdgpu-opencl-switcher:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    env:
+      PKGDEST: /tmp/hl-additions
+      repo: "hl-additions"
+      arch_repo: "x86_64"
+
+    steps:
+      - name: "Checkout PKGBUILDs"
+        run: |
+            git clone https://github.com/Hybrid-Project-Developers/Hybrid-Linux-PKGBUILDs.git
+            cd Hybrid-Linux-PKGBUILDs/amdgpu-opencl-switcher
+
+      - name: "Prepare for makepkg"
+        run: |
+            pacman -Syu --noconfirm base-devel sudo wget sshpass
+            useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            chown user -R ..
+            chown user -R /tmp
+            sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
+            sed -i 's/#GPGKEY=""/GPGKEY="${{ secrets.GPG_KEY }}"/g' /etc/makepkg.conf
+      
+      - name: "Build amdgpu-opencl-switcher"
+        run: |
+            su user -c "yes '' | makepkg --noconfirm -s"
+      
+      - name: "Upload to repo"
+        run: |
+            cd $PKGDEST
+            wget https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.db.tar.gz https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.files.tar.gz
+            sudo repo-add $repo.db.tar.gz *.pkg.tar.zst
+            echo -e "${{ secrets.PRIVATE_SSH_KEY }}" > /tmp/tmp_id
+            chmod 600 /tmp/tmp_id
+            echo "Upload to SourceForge Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.SOURCEFORGE_USERNAME }}@${{ secrets.SOURCEFORGE_HOST }}:/home/pfs/project/hybridlinux/Repo/$repo/$arch_repo
+            echo "Upload to OSDN Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.OSDN_USERNAME }}@${{ secrets.OSDN_HOST }}:/storage/groups/h/hy/hybridlinux/$repo/$arch_repo
+
+  build-amdgpu-vulkan-switcher:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    env:
+      PKGDEST: /tmp/hl-additions
+      repo: "hl-additions"
+      arch_repo: "x86_64"
+
+    needs: [ build_amdgpu_opencl_switcher ]
+
+    steps:
+      - name: "Checkout PKGBUILDs"
+        run: |
+            git clone https://github.com/Hybrid-Project-Developers/Hybrid-Linux-PKGBUILDs.git
+            cd Hybrid-Linux-PKGBUILDs/amdgpu-vulkan-switcher
+
+      - name: "Prepare for makepkg"
+        run: |
+            pacman -Syu --noconfirm base-devel sudo wget sshpass
+            useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            chown user -R ..
+            chown user -R /tmp
+            sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
+            sed -i 's/#GPGKEY=""/GPGKEY="${{ secrets.GPG_KEY }}"/g' /etc/makepkg.conf
+      
+      - name: "Build amdgpu-vulkan-switcher"
+        run: |
+            su user -c "yes '' | makepkg --noconfirm -s"
+      
+      - name: "Upload to repo"
+        run: |
+            cd $PKGDEST
+            wget https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.db.tar.gz https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.files.tar.gz
+            sudo repo-add $repo.db.tar.gz *.pkg.tar.zst
+            echo -e "${{ secrets.PRIVATE_SSH_KEY }}" > /tmp/tmp_id
+            chmod 600 /tmp/tmp_id
+            echo "Upload to SourceForge Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.SOURCEFORGE_USERNAME }}@${{ secrets.SOURCEFORGE_HOST }}:/home/pfs/project/hybridlinux/Repo/$repo/$arch_repo
+            echo "Upload to OSDN Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.OSDN_USERNAME }}@${{ secrets.OSDN_HOST }}:/storage/groups/h/hy/hybridlinux/$repo/$arch_repo
+
+  build-hidpi-daemon:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    env:
+      PKGDEST: /tmp/hl-additions
+      repo: "hl-additions"
+      arch_repo: "x86_64"
+
+    needs: [ build_amdgpu_vulkan_switcher ]
+
+    steps:
+      - name: "Checkout PKGBUILDs from AUR"
+        run: |
+            git clone https://aur.archlinux.org/hidpi-daemon.git
+            cd hidpi-daemon
+
+      - name: "Prepare for makepkg"
+        run: |
+            pacman -Syu --noconfirm base-devel sudo wget sshpass
+            useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            chown user -R ..
+            chown user -R /tmp
+            sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
+            sed -i 's/#GPGKEY=""/GPGKEY="${{ secrets.GPG_KEY }}"/g' /etc/makepkg.conf
+      
+      - name: "Build amdgpu-vulkan-switcher"
+        run: |
+            su user -c "yes '' | makepkg --noconfirm -s"
+      
+      - name: "Upload to repo"
+        run: |
+            cd $PKGDEST
+            wget https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.db.tar.gz https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.files.tar.gz
+            sudo repo-add $repo.db.tar.gz *.pkg.tar.zst
+            echo -e "${{ secrets.PRIVATE_SSH_KEY }}" > /tmp/tmp_id
+            chmod 600 /tmp/tmp_id
+            echo "Upload to SourceForge Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.SOURCEFORGE_USERNAME }}@${{ secrets.SOURCEFORGE_HOST }}:/home/pfs/project/hybridlinux/Repo/$repo/$arch_repo
+            echo "Upload to OSDN Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.OSDN_USERNAME }}@${{ secrets.OSDN_HOST }}:/storage/groups/h/hy/hybridlinux/$repo/$arch_repo
+
+  build-nvidia-tweaks:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    env:
+      PKGDEST: /tmp/hl-additions
+      repo: "hl-additions"
+      arch_repo: "x86_64"
+
+    needs: [ build_amdgpu_vulkan_switcher ]
+
+    steps:
+      - name: "Checkout PKGBUILDs from AUR"
+        run: |
+            git clone https://aur.archlinux.org/nvidia-tweaks.git
+            cd nvidia-tweaks
+
+      - name: "Prepare for makepkg"
+        run: |
+            pacman -Syu --noconfirm base-devel sudo wget sshpass
+            useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            chown user -R ..
+            chown user -R /tmp
+            sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
+            sed -i 's/#GPGKEY=""/GPGKEY="${{ secrets.GPG_KEY }}"/g' /etc/makepkg.conf
+      
+      - name: "Build amdgpu-vulkan-switcher"
+        run: |
+            su user -c "yes '' | makepkg --noconfirm -s"
+      
+      - name: "Upload to repo"
+        run: |
+            cd $PKGDEST
+            wget https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.db.tar.gz https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.files.tar.gz
+            sudo repo-add $repo.db.tar.gz *.pkg.tar.zst
+            echo -e "${{ secrets.PRIVATE_SSH_KEY }}" > /tmp/tmp_id
+            chmod 600 /tmp/tmp_id
+            echo "Upload to SourceForge Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.SOURCEFORGE_USERNAME }}@${{ secrets.SOURCEFORGE_HOST }}:/home/pfs/project/hybridlinux/Repo/$repo/$arch_repo
+            echo "Upload to OSDN Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.OSDN_USERNAME }}@${{ secrets.OSDN_HOST }}:/storage/groups/h/hy/hybridlinux/$repo/$arch_repo

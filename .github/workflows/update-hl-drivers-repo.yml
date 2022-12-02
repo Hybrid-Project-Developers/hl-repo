@@ -1,0 +1,419 @@
+name: "hl-drivers Repository Update"
+on:
+  schedule:
+    - cron: '0 7 * * *' # Every Day an 7am
+
+jobs:
+  build-amf-amdgpu-pro-fix:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    env:
+      PKGDEST: /tmp/hl-drivers
+      repo: "hl-drivers"
+      arch_repo: "x86_64"
+
+    steps:
+      - name: "Checkout PKGBUILDs"
+        run: |
+            git clone https://aur.archlinux.org/amdgpu-pro-installer-fix.git
+            cd amdgpu-pro-installer-fix
+
+      - name: "Prepare for makepkg"
+        run: |
+            pacman -Syu --noconfirm base-devel sudo wget sshpass
+            useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            chown user -R ..
+            chown user -R /tmp
+            sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
+            sed -i 's/#GPGKEY=""/GPGKEY="${{ secrets.GPG_KEY }}"/g' /etc/makepkg.conf
+      
+      - name: "Build amf-amdgpu-pro-fix"
+        run: |
+            su user -c "yes '' | makepkg --noconfirm -s"
+      
+      - name: "Upload to repo"
+        run: |
+            cd $PKGDEST
+            rm -rfv lib32-*.pkg.tar.zst
+            wget https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.db.tar.gz https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.files.tar.gz
+            sudo repo-add $repo.db.tar.gz *.pkg.tar.zst
+            echo -e "${{ secrets.PRIVATE_SSH_KEY }}" > /tmp/tmp_id
+            chmod 600 /tmp/tmp_id
+            echo "Upload to SourceForge Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.SOURCEFORGE_USERNAME }}@${{ secrets.SOURCEFORGE_HOST }}:/home/pfs/project/hybridlinux/Repo/$repo/$arch_repo
+            echo "Upload to OSDN Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.OSDN_USERNAME }}@${{ secrets.OSDN_HOST }}:/storage/groups/h/hy/hybridlinux/$repo/$arch_repo
+
+  build-e1000e-dkms:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    env:
+      PKGDEST: /tmp/hl-drivers
+      repo: "hl-drivers"
+      arch_repo: "x86_64"
+
+    needs: [ build-amf-amdgpu-pro-fix ]
+
+    steps:
+      - name: "Checkout PKGBUILDs"
+        run: |
+            git clone https://aur.archlinux.org/e1000e-dkms.git
+            cd e1000e-dkms
+
+      - name: "Prepare for makepkg"
+        run: |
+            pacman -Syu --noconfirm base-devel sudo wget sshpass
+            useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            chown user -R ..
+            chown user -R /tmp
+            sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
+            sed -i 's/#GPGKEY=""/GPGKEY="${{ secrets.GPG_KEY }}"/g' /etc/makepkg.conf
+      
+      - name: "Build e1000e-dkms"
+        run: |
+            su user -c "yes '' | makepkg --noconfirm -s"
+      
+      - name: "Upload to repo"
+        run: |
+            cd $PKGDEST
+            wget https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.db.tar.gz https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.files.tar.gz
+            sudo repo-add $repo.db.tar.gz *.pkg.tar.zst
+            echo -e "${{ secrets.PRIVATE_SSH_KEY }}" > /tmp/tmp_id
+            chmod 600 /tmp/tmp_id
+            echo "Upload to SourceForge Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.SOURCEFORGE_USERNAME }}@${{ secrets.SOURCEFORGE_HOST }}:/home/pfs/project/hybridlinux/Repo/$repo/$arch_repo
+            echo "Upload to OSDN Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.OSDN_USERNAME }}@${{ secrets.OSDN_HOST }}:/storage/groups/h/hy/hybridlinux/$repo/$arch_repo
+
+  build-hid-sony-panic-fix-dkms:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    env:
+      PKGDEST: /tmp/hl-drivers
+      repo: "hl-drivers"
+      arch_repo: "x86_64"
+
+    needs: [ build-e1000e-dkms ]
+
+    steps:
+      - name: "Checkout PKGBUILDs from AUR"
+        run: |
+            git clone https://aur.archlinux.org/hid-sony-panic-fix-dkms.git
+            cd hid-sony-panic-fix-dkms
+
+      - name: "Prepare for makepkg"
+        run: |
+            pacman -Syu --noconfirm base-devel sudo wget sshpass
+            useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            chown user -R ..
+            chown user -R /tmp
+            sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
+            sed -i 's/#GPGKEY=""/GPGKEY="${{ secrets.GPG_KEY }}"/g' /etc/makepkg.conf
+      
+      - name: "Build hid-sony-panic-fix-dkms"
+        run: |
+            su user -c "yes '' | makepkg --noconfirm -s"
+      
+      - name: "Upload to repo"
+        run: |
+            cd $PKGDEST
+            wget https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.db.tar.gz https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.files.tar.gz
+            sudo repo-add $repo.db.tar.gz *.pkg.tar.zst
+            echo -e "${{ secrets.PRIVATE_SSH_KEY }}" > /tmp/tmp_id
+            chmod 600 /tmp/tmp_id
+            echo "Upload to SourceForge Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.SOURCEFORGE_USERNAME }}@${{ secrets.SOURCEFORGE_HOST }}:/home/pfs/project/hybridlinux/Repo/$repo/$arch_repo
+            echo "Upload to OSDN Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.OSDN_USERNAME }}@${{ secrets.OSDN_HOST }}:/storage/groups/h/hy/hybridlinux/$repo/$arch_repo
+
+  build-nvidia-390xx-dkms:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    env:
+      PKGDEST: /tmp/hl-drivers
+      repo: "hl-drivers"
+      arch_repo: "x86_64"
+
+    needs: [ build-hid-sony-panic-fix-dkms ]
+
+    steps:
+      - name: "Checkout PKGBUILDs from Herecura GitLab"
+        run: |
+            git clone https://gitlab.com/herecura/packages/nvidia-390xx-dkms.git
+            cd nvidia-390xx-dkms
+
+      - name: "Prepare for makepkg"
+        run: |
+            pacman -Syu --noconfirm base-devel sudo wget sshpass
+            useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            chown user -R ..
+            chown user -R /tmp
+            sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
+            sed -i 's/#GPGKEY=""/GPGKEY="${{ secrets.GPG_KEY }}"/g' /etc/makepkg.conf
+      
+      - name: "Build nvidia-390xx-dkms"
+        run: |
+            su user -c "yes '' | makepkg --noconfirm -s"
+      
+      - name: "Upload to repo"
+        run: |
+            cd $PKGDEST
+            wget https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.db.tar.gz https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.files.tar.gz
+            sudo repo-add $repo.db.tar.gz *.pkg.tar.zst
+            echo -e "${{ secrets.PRIVATE_SSH_KEY }}" > /tmp/tmp_id
+            chmod 600 /tmp/tmp_id
+            echo "Upload to SourceForge Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.SOURCEFORGE_USERNAME }}@${{ secrets.SOURCEFORGE_HOST }}:/home/pfs/project/hybridlinux/Repo/$repo/$arch_repo
+            echo "Upload to OSDN Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.OSDN_USERNAME }}@${{ secrets.OSDN_HOST }}:/storage/groups/h/hy/hybridlinux/$repo/$arch_repo
+
+  build-nvidia-390xx-utils:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    env:
+      PKGDEST: /tmp/hl-drivers
+      repo: "hl-drivers"
+      arch_repo: "x86_64"
+
+    needs: [ build-nvidia-390xx-dkms ]
+
+    steps:
+      - name: "Checkout PKGBUILDs from Herecura GitLab"
+        run: |
+            git clone https://gitlab.com/herecura/packages/nvidia-390xx-utils.git
+            cd nvidia-390xx-utils
+
+      - name: "Prepare for makepkg"
+        run: |
+            pacman -Syu --noconfirm base-devel sudo wget sshpass
+            useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            chown user -R ..
+            chown user -R /tmp
+            sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
+            sed -i 's/#GPGKEY=""/GPGKEY="${{ secrets.GPG_KEY }}"/g' /etc/makepkg.conf
+      
+      - name: "Build nvidia-390xx-utils"
+        run: |
+            su user -c "yes '' | makepkg --noconfirm -s"
+      
+      - name: "Upload to repo"
+        run: |
+            cd $PKGDEST
+            wget https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.db.tar.gz https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.files.tar.gz
+            sudo repo-add $repo.db.tar.gz *.pkg.tar.zst
+            echo -e "${{ secrets.PRIVATE_SSH_KEY }}" > /tmp/tmp_id
+            chmod 600 /tmp/tmp_id
+            echo "Upload to SourceForge Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.SOURCEFORGE_USERNAME }}@${{ secrets.SOURCEFORGE_HOST }}:/home/pfs/project/hybridlinux/Repo/$repo/$arch_repo
+            echo "Upload to OSDN Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.OSDN_USERNAME }}@${{ secrets.OSDN_HOST }}:/storage/groups/h/hy/hybridlinux/$repo/$arch_repo
+
+  build-nvidia-470xx-dkms:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    env:
+      PKGDEST: /tmp/hl-drivers
+      repo: "hl-drivers"
+      arch_repo: "x86_64"
+
+    needs: [ build-nvidia-390xx-utils ]
+
+    steps:
+      - name: "Checkout PKGBUILDs from Herecura GitLab"
+        run: |
+            git clone https://gitlab.com/herecura/packages/nvidia-470xx-dkms.git
+            cd nvidia-470xx-dkms
+
+      - name: "Prepare for makepkg"
+        run: |
+            pacman -Syu --noconfirm base-devel sudo wget sshpass
+            useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            chown user -R ..
+            chown user -R /tmp
+            sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
+            sed -i 's/#GPGKEY=""/GPGKEY="${{ secrets.GPG_KEY }}"/g' /etc/makepkg.conf
+      
+      - name: "Build nvidia-470xx-dkms"
+        run: |
+            su user -c "yes '' | makepkg --noconfirm -s"
+      
+      - name: "Upload to repo"
+        run: |
+            cd $PKGDEST
+            wget https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.db.tar.gz https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.files.tar.gz
+            sudo repo-add $repo.db.tar.gz *.pkg.tar.zst
+            echo -e "${{ secrets.PRIVATE_SSH_KEY }}" > /tmp/tmp_id
+            chmod 600 /tmp/tmp_id
+            echo "Upload to SourceForge Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.SOURCEFORGE_USERNAME }}@${{ secrets.SOURCEFORGE_HOST }}:/home/pfs/project/hybridlinux/Repo/$repo/$arch_repo
+            echo "Upload to OSDN Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.OSDN_USERNAME }}@${{ secrets.OSDN_HOST }}:/storage/groups/h/hy/hybridlinux/$repo/$arch_repo
+
+  build-nvidia-470xx-utils:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    env:
+      PKGDEST: /tmp/hl-drivers
+      repo: "hl-drivers"
+      arch_repo: "x86_64"
+
+    needs: [ build-nvidia-470xx-dkms ]
+
+    steps:
+      - name: "Checkout PKGBUILDs from Herecura GitLab"
+        run: |
+            git clone https://gitlab.com/herecura/packages/nvidia-470xx-utils.git
+            cd nvidia-470xx-utils
+
+      - name: "Prepare for makepkg"
+        run: |
+            pacman -Syu --noconfirm base-devel sudo wget sshpass
+            useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            chown user -R ..
+            chown user -R /tmp
+            sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
+            sed -i 's/#GPGKEY=""/GPGKEY="${{ secrets.GPG_KEY }}"/g' /etc/makepkg.conf
+      
+      - name: "Build nvidia-470xx-utils"
+        run: |
+            su user -c "yes '' | makepkg --noconfirm -s"
+      
+      - name: "Upload to repo"
+        run: |
+            cd $PKGDEST
+            wget https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.db.tar.gz https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.files.tar.gz
+            sudo repo-add $repo.db.tar.gz *.pkg.tar.zst
+            echo -e "${{ secrets.PRIVATE_SSH_KEY }}" > /tmp/tmp_id
+            chmod 600 /tmp/tmp_id
+            echo "Upload to SourceForge Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.SOURCEFORGE_USERNAME }}@${{ secrets.SOURCEFORGE_HOST }}:/home/pfs/project/hybridlinux/Repo/$repo/$arch_repo
+            echo "Upload to OSDN Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.OSDN_USERNAME }}@${{ secrets.OSDN_HOST }}:/storage/groups/h/hy/hybridlinux/$repo/$arch_repo
+
+  build-nvidia-vaapi-driver:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    env:
+      PKGDEST: /tmp/hl-drivers
+      repo: "hl-drivers"
+      arch_repo: "x86_64"
+
+    needs: [ build-nvidia-470xx-utils ]
+
+    steps:
+      - name: "Checkout PKGBUILDs from AUR"
+        run: |
+            git clone https://aur.archlinux.org/nvidia-vaapi-driver-git.git
+            cd nvidia-vaapi-driver-git
+
+      - name: "Prepare for makepkg"
+        run: |
+            pacman -Syu --noconfirm base-devel sudo wget sshpass
+            useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            chown user -R ..
+            chown user -R /tmp
+            sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
+            sed -i 's/#GPGKEY=""/GPGKEY="${{ secrets.GPG_KEY }}"/g' /etc/makepkg.conf
+      
+      - name: "Build nvidia-vaapi-driver-git"
+        run: |
+            su user -c "yes '' | makepkg --noconfirm -s"
+      
+      - name: "Upload to repo"
+        run: |
+            cd $PKGDEST
+            wget https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.db.tar.gz https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.files.tar.gz
+            sudo repo-add $repo.db.tar.gz *.pkg.tar.zst
+            echo -e "${{ secrets.PRIVATE_SSH_KEY }}" > /tmp/tmp_id
+            chmod 600 /tmp/tmp_id
+            echo "Upload to SourceForge Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.SOURCEFORGE_USERNAME }}@${{ secrets.SOURCEFORGE_HOST }}:/home/pfs/project/hybridlinux/Repo/$repo/$arch_repo
+            echo "Upload to OSDN Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.OSDN_USERNAME }}@${{ secrets.OSDN_HOST }}:/storage/groups/h/hy/hybridlinux/$repo/$arch_repo
+
+  build-winesync:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    env:
+      PKGDEST: /tmp/hl-drivers
+      repo: "hl-drivers"
+      arch_repo: "x86_64"
+
+    needs: [ build-nvidia-vaapi-driver ]
+
+    steps:
+      - name: "Checkout PKGBUILDs from AUR"
+        run: |
+            git clone https://aur.archlinux.org/winesync.git
+            cd winesync
+
+      - name: "Prepare for makepkg"
+        run: |
+            pacman -Syu --noconfirm base-devel sudo wget sshpass
+            useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            chown user -R ..
+            chown user -R /tmp
+            sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
+            sed -i 's/#GPGKEY=""/GPGKEY="${{ secrets.GPG_KEY }}"/g' /etc/makepkg.conf
+      
+      - name: "Build hid-sony-panic-fix-dkms"
+        run: |
+            su user -c "yes '' | makepkg --noconfirm -s"
+      
+      - name: "Upload to repo"
+        run: |
+            cd $PKGDEST
+            wget https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.db.tar.gz https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.files.tar.gz
+            sudo repo-add $repo.db.tar.gz *.pkg.tar.zst
+            echo -e "${{ secrets.PRIVATE_SSH_KEY }}" > /tmp/tmp_id
+            chmod 600 /tmp/tmp_id
+            echo "Upload to SourceForge Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.SOURCEFORGE_USERNAME }}@${{ secrets.SOURCEFORGE_HOST }}:/home/pfs/project/hybridlinux/Repo/$repo/$arch_repo
+            echo "Upload to OSDN Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.OSDN_USERNAME }}@${{ secrets.OSDN_HOST }}:/storage/groups/h/hy/hybridlinux/$repo/$arch_repo
+
+  build-mesa-tkg:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    env:
+      PKGDEST: /tmp/hl-drivers
+      repo: "hl-drivers"
+      arch_repo: "x86_64"
+      _compiler: "clang"
+      _no_lto: "true"
+      _additional_meson_flags_64: "-march=x86-64 -Dgallium-rusticl=true -Dopencl-spirv=true -Dshader-cache=true -Dllvm=true"
+      MESA_WHICH_LLVM: "3"
+
+    needs: [ build-winesync ]
+
+    steps:
+      - name: "Checkout PKGBUILDs from Github"
+        run: |
+            git clone https://github.com/Frogging-Family/mesa-git.git
+            cd mesa-git
+
+      - name: "Prepare for makepkg"
+        run: |
+            pacman -Syu --noconfirm base-devel sudo wget sshpass
+            useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            chown user -R ..
+            chown user -R /tmp
+            sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
+            sed -i 's/#GPGKEY=""/GPGKEY="${{ secrets.GPG_KEY }}"/g' /etc/makepkg.conf
+
+      - name: "Build mesa-tkg-git"
+        run: |
+            su user -c "yes '' | makepkg --noconfirm -s"
+
+      - name: "Upload to repo"
+        run: |
+            cd $PKGDEST
+            rm -rfv lib32-*.pkg.tar.zst
+            wget https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.db.tar.gz https://osdn.net/projects/hybridlinux/storage/$repo/$arch_repo/$repo.files.tar.gz
+            sudo repo-add $repo.db.tar.gz *.pkg.tar.zst
+            echo -e "${{ secrets.PRIVATE_SSH_KEY }}" > /tmp/tmp_id
+            chmod 600 /tmp/tmp_id
+            echo "Upload to SourceForge Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.SOURCEFORGE_USERNAME }}@${{ secrets.SOURCEFORGE_HOST }}:/home/pfs/project/hybridlinux/Repo/$repo/$arch_repo
+            echo "Upload to OSDN Mirror"
+            scp -O -v -P 22 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o PubkeyAcceptedKeyTypes=+ssh-rsa -i /tmp/tmp_id $PKGDEST/* ${{ secrets.OSDN_USERNAME }}@${{ secrets.OSDN_HOST }}:/storage/groups/h/hy/hybridlinux/$repo/$arch_repo
