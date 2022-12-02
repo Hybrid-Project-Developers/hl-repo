@@ -1,7 +1,7 @@
 name: "hl-core Repository Update"
 on:
   schedule:
-    - cron: '5 8 * * 7'
+    - cron: '17 */12 * * *' # “At minute 17 past every 12th hour.”
 
 jobs:
   build-mirrorlists:

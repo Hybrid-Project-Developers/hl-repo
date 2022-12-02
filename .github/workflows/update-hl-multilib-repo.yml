@@ -1,7 +1,7 @@
 name: "hl-multilib Repository Update"
 on:
   schedule:
-    - cron: '0 7 * * *' # Every Day an 7am
+    - cron: '17 */12 * * *' # “At minute 17 past every 12th hour.”
 
 jobs:
   build-lib32-amf-amdgpu-pro-fix:
