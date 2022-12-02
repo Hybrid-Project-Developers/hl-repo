@@ -2,6 +2,7 @@ name: "hl-multilib-v3 Repository Update"
 on:
   schedule:
     - cron: '17 */12 * * *' # “At minute 17 past every 12th hour.”
+  workflow_dispatch:
 env:
   CFLAGS: "-march=x86-64-v3 -O2 -pipe -fno-plt -fexceptions -Wp,-D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -fstack-clash-protection -fcf-protection"
 
