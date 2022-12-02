@@ -1,5 +1,6 @@
 name: "hl-drivers-v2 Repository Update"
 on:
+  push:
   schedule:
     - cron: '17 */12 * * *' # “At minute 17 past every 12th hour.”
   workflow_dispatch:

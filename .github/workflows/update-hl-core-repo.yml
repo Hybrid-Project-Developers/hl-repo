@@ -52,7 +52,7 @@ jobs:
       repo: "hl-core"
       arch_repo: "x86_64"
 
-    needs: [ build_mirrorlists ]
+    needs: [ build-mirrorlists ]
 
     steps:
       - name: "Checkout PKGBUILDs"
@@ -134,7 +134,7 @@ jobs:
       repo: "hl-core"
       arch_repo: "x86_64"
 
-    needs: [ build-calamares ]
+    needs: [ build-neofetch-hybrid ]
 
     steps:
       - name: "Checkout PKGBUILDs"

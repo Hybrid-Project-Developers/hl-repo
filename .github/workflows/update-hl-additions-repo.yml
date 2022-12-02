@@ -52,7 +52,7 @@ jobs:
       repo: "hl-additions"
       arch_repo: "x86_64"
 
-    needs: [ build_amdgpu_opencl_switcher ]
+    needs: [ build-amdgpu-opencl-switcher ]
 
     steps:
       - name: "Checkout PKGBUILDs"
@@ -93,7 +93,7 @@ jobs:
       repo: "hl-additions"
       arch_repo: "x86_64"
 
-    needs: [ build_amdgpu_vulkan_switcher ]
+    needs: [ build-amdgpu-vulkan-switcher ]
 
     steps:
       - name: "Checkout PKGBUILDs from AUR"
@@ -134,7 +134,7 @@ jobs:
       repo: "hl-additions"
       arch_repo: "x86_64"
 
-    needs: [ build_amdgpu_vulkan_switcher ]
+    needs: [ build-amdgpu-vulkan-switcher ]
 
     steps:
       - name: "Checkout PKGBUILDs from AUR"

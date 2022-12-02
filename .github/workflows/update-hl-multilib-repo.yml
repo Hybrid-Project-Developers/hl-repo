@@ -1,5 +1,6 @@
 name: "hl-multilib Repository Update"
 on:
+  push:
   schedule:
     - cron: '17 */12 * * *' # “At minute 17 past every 12th hour.”
   workflow_dispatch:
@@ -57,7 +58,7 @@ jobs:
       _additional_meson_flags_64: "-march=x86-64 -Dgallium-rusticl=true -Dopencl-spirv=true -Dshader-cache=true -Dllvm=true"
       MESA_WHICH_LLVM: "3"
 
-    needs: [ build-winesync ]
+    needs: [ build-lib32-amf-amdgpu-pro-fix ]
 
     steps:
       - name: "Checkout PKGBUILDs from Github"
