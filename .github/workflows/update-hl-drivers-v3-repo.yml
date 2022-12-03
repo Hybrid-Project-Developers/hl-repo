@@ -24,12 +24,12 @@ jobs:
       - name: "Checkout PKGBUILDs"
         run: |
             git clone https://aur.archlinux.org/amdgpu-pro-installer-fix.git
-            cd amdgpu-pro-installer-fix
 
       - name: "Prepare for makepkg"
         run: |
             pacman -Syu --noconfirm base-devel sudo wget sshpass
             useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            cd amdgpu-pro-installer-fix
             chown user -R ..
             chown user -R /tmp
             sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
@@ -68,12 +68,12 @@ jobs:
       - name: "Checkout PKGBUILDs"
         run: |
             git clone https://aur.archlinux.org/e1000e-dkms.git
-            cd e1000e-dkms
 
       - name: "Prepare for makepkg"
         run: |
             pacman -Syu --noconfirm base-devel sudo wget sshpass
             useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            cd e1000e-dkms
             chown user -R ..
             chown user -R /tmp
             sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
@@ -112,12 +112,12 @@ jobs:
       - name: "Checkout PKGBUILDs from AUR"
         run: |
             git clone https://aur.archlinux.org/hid-sony-panic-fix-dkms.git
-            cd hid-sony-panic-fix-dkms
 
       - name: "Prepare for makepkg"
         run: |
             pacman -Syu --noconfirm base-devel sudo wget sshpass
             useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            cd hid-sony-panic-fix-dkms
             chown user -R ..
             chown user -R /tmp
             sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
@@ -156,12 +156,13 @@ jobs:
       - name: "Checkout PKGBUILDs from Herecura GitLab"
         run: |
             git clone https://gitlab.com/herecura/packages/nvidia-390xx-dkms.git
-            cd nvidia-390xx-dkms
+
 
       - name: "Prepare for makepkg"
         run: |
             pacman -Syu --noconfirm base-devel sudo wget sshpass
             useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            cd nvidia-390xx-dkms
             chown user -R ..
             chown user -R /tmp
             sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
@@ -200,12 +201,12 @@ jobs:
       - name: "Checkout PKGBUILDs from Herecura GitLab"
         run: |
             git clone https://gitlab.com/herecura/packages/nvidia-390xx-utils.git
-            cd nvidia-390xx-utils
 
       - name: "Prepare for makepkg"
         run: |
             pacman -Syu --noconfirm base-devel sudo wget sshpass
             useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            cd nvidia-390xx-utils
             chown user -R ..
             chown user -R /tmp
             sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
@@ -244,12 +245,12 @@ jobs:
       - name: "Checkout PKGBUILDs from Herecura GitLab"
         run: |
             git clone https://gitlab.com/herecura/packages/nvidia-470xx-dkms.git
-            cd nvidia-470xx-dkms
 
       - name: "Prepare for makepkg"
         run: |
             pacman -Syu --noconfirm base-devel sudo wget sshpass
             useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            cd nvidia-470xx-dkms
             chown user -R ..
             chown user -R /tmp
             sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
@@ -288,12 +289,12 @@ jobs:
       - name: "Checkout PKGBUILDs from Herecura GitLab"
         run: |
             git clone https://gitlab.com/herecura/packages/nvidia-470xx-utils.git
-            cd nvidia-470xx-utils
 
       - name: "Prepare for makepkg"
         run: |
             pacman -Syu --noconfirm base-devel sudo wget sshpass
             useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            cd nvidia-470xx-utils
             chown user -R ..
             chown user -R /tmp
             sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
@@ -332,12 +333,12 @@ jobs:
       - name: "Checkout PKGBUILDs from AUR"
         run: |
             git clone https://aur.archlinux.org/nvidia-vaapi-driver-git.git
-            cd nvidia-vaapi-driver-git
 
       - name: "Prepare for makepkg"
         run: |
             pacman -Syu --noconfirm base-devel sudo wget sshpass
             useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            cd nvidia-vaapi-driver-git
             chown user -R ..
             chown user -R /tmp
             sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
@@ -376,12 +377,12 @@ jobs:
       - name: "Checkout PKGBUILDs from AUR"
         run: |
             git clone https://aur.archlinux.org/winesync.git
-            cd winesync
 
       - name: "Prepare for makepkg"
         run: |
             pacman -Syu --noconfirm base-devel sudo wget sshpass
             useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            cd winesync
             chown user -R ..
             chown user -R /tmp
             sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
@@ -424,12 +425,12 @@ jobs:
       - name: "Checkout PKGBUILDs from Github"
         run: |
             git clone https://github.com/Frogging-Family/mesa-git.git
-            cd mesa-git
 
       - name: "Prepare for makepkg"
         run: |
             pacman -Syu --noconfirm base-devel sudo wget sshpass
             useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            cd mesa-git
             chown user -R ..
             chown user -R /tmp
             sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
