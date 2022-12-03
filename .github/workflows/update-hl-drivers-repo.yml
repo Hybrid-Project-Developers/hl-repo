@@ -21,7 +21,7 @@ jobs:
       - name: "Checkout PKGBUILDs"
         run: |
             git clone https://aur.archlinux.org/amdgpu-pro-installer-fix.git
-            cd amdgpu-pro-installer-fix
+            cd /__w/hl-repo/hl-repo/amdgpu-pro-installer-fix
 
       - name: "Prepare for makepkg"
         run: |
@@ -66,7 +66,7 @@ jobs:
       - name: "Checkout PKGBUILDs"
         run: |
             git clone https://aur.archlinux.org/e1000e-dkms.git
-            cd e1000e-dkms
+            cd /__w/hl-repo/hl-repo/e1000e-dkms
 
       - name: "Prepare for makepkg"
         run: |
@@ -110,7 +110,7 @@ jobs:
       - name: "Checkout PKGBUILDs from AUR"
         run: |
             git clone https://aur.archlinux.org/hid-sony-panic-fix-dkms.git
-            cd hid-sony-panic-fix-dkms
+            cd /__w/hl-repo/hl-repo/hid-sony-panic-fix-dkms
 
       - name: "Prepare for makepkg"
         run: |
@@ -154,7 +154,7 @@ jobs:
       - name: "Checkout PKGBUILDs from Herecura GitLab"
         run: |
             git clone https://gitlab.com/herecura/packages/nvidia-390xx-dkms.git
-            cd nvidia-390xx-dkms
+            cd /__w/hl-repo/hl-repo/nvidia-390xx-dkms
 
       - name: "Prepare for makepkg"
         run: |
@@ -198,7 +198,7 @@ jobs:
       - name: "Checkout PKGBUILDs from Herecura GitLab"
         run: |
             git clone https://gitlab.com/herecura/packages/nvidia-390xx-utils.git
-            cd nvidia-390xx-utils
+            cd /__w/hl-repo/hl-repo/nvidia-390xx-utils
 
       - name: "Prepare for makepkg"
         run: |
@@ -242,7 +242,7 @@ jobs:
       - name: "Checkout PKGBUILDs from Herecura GitLab"
         run: |
             git clone https://gitlab.com/herecura/packages/nvidia-470xx-dkms.git
-            cd nvidia-470xx-dkms
+            cd /__w/hl-repo/hl-repo/nvidia-470xx-dkms
 
       - name: "Prepare for makepkg"
         run: |
@@ -286,7 +286,7 @@ jobs:
       - name: "Checkout PKGBUILDs from Herecura GitLab"
         run: |
             git clone https://gitlab.com/herecura/packages/nvidia-470xx-utils.git
-            cd nvidia-470xx-utils
+            cd /__w/hl-repo/hl-repo/nvidia-470xx-utils
 
       - name: "Prepare for makepkg"
         run: |
@@ -330,7 +330,7 @@ jobs:
       - name: "Checkout PKGBUILDs from AUR"
         run: |
             git clone https://aur.archlinux.org/nvidia-vaapi-driver-git.git
-            cd nvidia-vaapi-driver-git
+            cd /__w/hl-repo/hl-repo/nvidia-vaapi-driver-git
 
       - name: "Prepare for makepkg"
         run: |
@@ -374,7 +374,7 @@ jobs:
       - name: "Checkout PKGBUILDs from AUR"
         run: |
             git clone https://aur.archlinux.org/winesync.git
-            cd winesync
+            cd /__w/hl-repo/hl-repo/winesync
 
       - name: "Prepare for makepkg"
         run: |
@@ -422,7 +422,7 @@ jobs:
       - name: "Checkout PKGBUILDs from Github"
         run: |
             git clone https://github.com/Frogging-Family/mesa-git.git
-            cd mesa-git
+            cd /__w/hl-repo/hl-repo/mesa-git
 
       - name: "Prepare for makepkg"
         run: |

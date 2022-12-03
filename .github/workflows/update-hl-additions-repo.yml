@@ -20,7 +20,7 @@ jobs:
       - name: "Checkout PKGBUILDs"
         run: |
             git clone https://github.com/Hybrid-Project-Developers/Hybrid-Linux-PKGBUILDs.git
-            cd Hybrid-Linux-PKGBUILDs/amdgpu-opencl-switcher
+            cd /__w/hl-repo/hl-repo/Hybrid-Linux-PKGBUILDs/amdgpu-opencl-switcher
 
       - name: "Prepare for makepkg"
         run: |
@@ -64,7 +64,7 @@ jobs:
       - name: "Checkout PKGBUILDs"
         run: |
             git clone https://github.com/Hybrid-Project-Developers/Hybrid-Linux-PKGBUILDs.git
-            cd Hybrid-Linux-PKGBUILDs/amdgpu-vulkan-switcher
+            cd /__w/hl-repo/hl-repo/Hybrid-Linux-PKGBUILDs/amdgpu-vulkan-switcher
 
       - name: "Prepare for makepkg"
         run: |
@@ -108,7 +108,7 @@ jobs:
       - name: "Checkout PKGBUILDs from AUR"
         run: |
             git clone https://aur.archlinux.org/hidpi-daemon.git
-            cd hidpi-daemon
+            cd /__w/hl-repo/hl-repo/hidpi-daemon
 
       - name: "Prepare for makepkg"
         run: |
@@ -152,7 +152,7 @@ jobs:
       - name: "Checkout PKGBUILDs from AUR"
         run: |
             git clone https://aur.archlinux.org/nvidia-tweaks.git
-            cd nvidia-tweaks
+            cd /__w/hl-repo/hl-repo/nvidia-tweaks
 
       - name: "Prepare for makepkg"
         run: |

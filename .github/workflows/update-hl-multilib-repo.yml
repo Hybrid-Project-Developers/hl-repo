@@ -21,7 +21,7 @@ jobs:
       - name: "Checkout PKGBUILDs"
         run: |
             git clone https://aur.archlinux.org/amdgpu-pro-installer-fix.git
-            cd amdgpu-pro-installer-fix
+            cd /__w/hl-repo/hl-repo/amdgpu-pro-installer-fix
 
       - name: "Prepare for makepkg"
         run: |
@@ -70,7 +70,7 @@ jobs:
       - name: "Checkout PKGBUILDs from Github"
         run: |
             git clone https://github.com/Frogging-Family/mesa-git.git
-            cd mesa-git
+            cd /__w/hl-repo/hl-repo/mesa-git
 
       - name: "Prepare for makepkg"
         run: |

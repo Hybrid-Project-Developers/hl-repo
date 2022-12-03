@@ -21,9 +21,6 @@ jobs:
       - name: "Install Git"
         run: pacman -Syu --noconfirm git
 
-      - name: "Check Directory"
-        run: pwd
-
       - name: "Checkout PKGBUILDs"
         run: |
             git clone https://aur.archlinux.org/amdgpu-pro-installer-fix.git
@@ -32,7 +29,7 @@ jobs:
         run: |
             pacman -Syu --noconfirm base-devel sudo wget sshpass
             useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-            cd amdgpu-pro-installer-fix
+            cd /__w/hl-repo/hl-repo/amdgpu-pro-installer-fix
             chown user -R ..
             chown user -R /tmp
             sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
@@ -76,7 +73,7 @@ jobs:
         run: |
             pacman -Syu --noconfirm base-devel sudo wget sshpass
             useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-            cd e1000e-dkms
+            cd /__w/hl-repo/hl-repo/e1000e-dkms
             chown user -R ..
             chown user -R /tmp
             sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
@@ -120,7 +117,7 @@ jobs:
         run: |
             pacman -Syu --noconfirm base-devel sudo wget sshpass
             useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-            cd hid-sony-panic-fix-dkms
+            cd /__w/hl-repo/hl-repo/hid-sony-panic-fix-dkms
             chown user -R ..
             chown user -R /tmp
             sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
@@ -165,7 +162,7 @@ jobs:
         run: |
             pacman -Syu --noconfirm base-devel sudo wget sshpass
             useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-            cd nvidia-390xx-dkms
+            cd /__w/hl-repo/hl-repo/nvidia-390xx-dkms
             chown user -R ..
             chown user -R /tmp
             sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
@@ -209,7 +206,7 @@ jobs:
         run: |
             pacman -Syu --noconfirm base-devel sudo wget sshpass
             useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-            cd nvidia-390xx-utils
+            cd /__w/hl-repo/hl-repo/nvidia-390xx-utils
             chown user -R ..
             chown user -R /tmp
             sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
@@ -253,7 +250,7 @@ jobs:
         run: |
             pacman -Syu --noconfirm base-devel sudo wget sshpass
             useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-            cd nvidia-470xx-dkms
+            cd /__w/hl-repo/hl-repo/nvidia-470xx-dkms
             chown user -R ..
             chown user -R /tmp
             sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
@@ -297,7 +294,7 @@ jobs:
         run: |
             pacman -Syu --noconfirm base-devel sudo wget sshpass
             useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-            cd nvidia-470xx-utils
+            cd /__w/hl-repo/hl-repo/nvidia-470xx-utils
             chown user -R ..
             chown user -R /tmp
             sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
@@ -341,7 +338,7 @@ jobs:
         run: |
             pacman -Syu --noconfirm base-devel sudo wget sshpass
             useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-            cd nvidia-vaapi-driver-git
+            cd /__w/hl-repo/hl-repo/nvidia-vaapi-driver-git
             chown user -R ..
             chown user -R /tmp
             sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
@@ -385,7 +382,7 @@ jobs:
         run: |
             pacman -Syu --noconfirm base-devel sudo wget sshpass
             useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-            cd winesync
+            cd /__w/hl-repo/hl-repo/winesync
             chown user -R ..
             chown user -R /tmp
             sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
@@ -433,7 +430,7 @@ jobs:
         run: |
             pacman -Syu --noconfirm base-devel sudo wget sshpass
             useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-            cd mesa-git
+            cd /__w/hl-repo/hl-repo/mesa-git
             chown user -R ..
             chown user -R /tmp
             sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf

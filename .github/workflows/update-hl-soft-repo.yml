@@ -21,7 +21,7 @@ jobs:
       - name: "Checkout PKGBUILDs from AUR"
         run: |
             git clone https://aur.archlinux.org/asusctl.git
-            cd asusctl
+            cd /__w/hl-repo/hl-repo/asusctl
 
       - name: "Prepare for makepkg"
         run: |
@@ -65,7 +65,7 @@ jobs:
       - name: "Checkout PKGBUILDs from AUR"
         run: |
             git clone https://aur.archlinux.org/obs-studio-amf.git
-            cd obs-studio-amf
+            cd /__w/hl-repo/hl-repo/obs-studio-amf
 
       - name: "Prepare for makepkg"
         run: |
@@ -78,14 +78,14 @@ jobs:
       
       - name: "Prepare for build"
         run: |
-            cd ..
+            cd /__w/hl-repo/hl-repo/
             git clone https://aur.archlinux.org/yay-bin.git
-            cd yay-bin
+            cd /__w/hl-repo/hl-repo/yay-bin
             chown user -R ..
             su user -c "yes '' | makepkg --noconfirm -si"
-            cd ..
+            cd /__w/hl-repo/hl-repo/
             yay -S --noconfirm amf-amdgpu-pro-fix
-            cd obs-studio-amf
+            cd /__w/hl-repo/hl-repo/obs-studio-amf
       
       - name: "Build OBS Studio"
         run: |
@@ -120,7 +120,7 @@ jobs:
       - name: "Checkout PKGBUILDs"
         run: |
             git clone https://github.com/Hybrid-Project-Developers/Hybrid-Linux-PKGBUILDs.git
-            cd Hybrid-Linux-PKGBUILDs/startwine
+            cd /__w/hl-repo/hl-repo/Hybrid-Linux-PKGBUILDs/startwine
 
       - name: "Prepare for makepkg"
         run: |
@@ -164,7 +164,7 @@ jobs:
       - name: "Checkout PKGBUILDs from AUR"
         run: |
             git clone https://aur.archlinux.org/openoffice-bin.git
-            cd openoffice-bin
+            cd /__w/hl-repo/hl-repo/openoffice-bin
 
       - name: "Prepare for makepkg"
         run: |
@@ -208,7 +208,7 @@ jobs:
       - name: "Checkout PKGBUILDs from AUR"
         run: |
             git clone https://aur.archlinux.org/portproton.git
-            cd openoffice-bin
+            cd /__w/hl-repo/hl-repo/portproton
 
       - name: "Prepare for makepkg"
         run: |
