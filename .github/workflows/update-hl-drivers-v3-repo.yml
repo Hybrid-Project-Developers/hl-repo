@@ -21,6 +21,9 @@ jobs:
       - name: "Install Git"
         run: pacman -Syu --noconfirm git
 
+      - name: "Check Directory"
+        run: pwd
+
       - name: "Checkout PKGBUILDs"
         run: |
             git clone https://aur.archlinux.org/amdgpu-pro-installer-fix.git
