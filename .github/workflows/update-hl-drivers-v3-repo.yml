@@ -18,6 +18,9 @@ jobs:
       arch_repo: "x86_64_v3"
 
     steps:
+      - name: "Install Git"
+        run: pacman -Syu --noconfirm git
+
       - name: "Checkout PKGBUILDs"
         run: |
             git clone https://aur.archlinux.org/amdgpu-pro-installer-fix.git
@@ -59,6 +62,9 @@ jobs:
     needs: [ build-amf-amdgpu-pro-fix ]
 
     steps:
+      - name: "Install Git"
+        run: pacman -Syu --noconfirm git
+
       - name: "Checkout PKGBUILDs"
         run: |
             git clone https://aur.archlinux.org/e1000e-dkms.git
@@ -100,6 +106,9 @@ jobs:
     needs: [ build-e1000e-dkms ]
 
     steps:
+      - name: "Install Git"
+        run: pacman -Syu --noconfirm git
+
       - name: "Checkout PKGBUILDs from AUR"
         run: |
             git clone https://aur.archlinux.org/hid-sony-panic-fix-dkms.git
@@ -141,6 +150,9 @@ jobs:
     needs: [ build-hid-sony-panic-fix-dkms ]
 
     steps:
+      - name: "Install Git"
+        run: pacman -Syu --noconfirm git
+
       - name: "Checkout PKGBUILDs from Herecura GitLab"
         run: |
             git clone https://gitlab.com/herecura/packages/nvidia-390xx-dkms.git
@@ -182,6 +194,9 @@ jobs:
     needs: [ build-nvidia-390xx-dkms ]
 
     steps:
+      - name: "Install Git"
+        run: pacman -Syu --noconfirm git
+
       - name: "Checkout PKGBUILDs from Herecura GitLab"
         run: |
             git clone https://gitlab.com/herecura/packages/nvidia-390xx-utils.git
@@ -223,6 +238,9 @@ jobs:
     needs: [ build-nvidia-390xx-utils ]
 
     steps:
+      - name: "Install Git"
+        run: pacman -Syu --noconfirm git
+
       - name: "Checkout PKGBUILDs from Herecura GitLab"
         run: |
             git clone https://gitlab.com/herecura/packages/nvidia-470xx-dkms.git
@@ -264,6 +282,9 @@ jobs:
     needs: [ build-nvidia-470xx-dkms ]
 
     steps:
+      - name: "Install Git"
+        run: pacman -Syu --noconfirm git
+
       - name: "Checkout PKGBUILDs from Herecura GitLab"
         run: |
             git clone https://gitlab.com/herecura/packages/nvidia-470xx-utils.git
@@ -305,6 +326,9 @@ jobs:
     needs: [ build-nvidia-470xx-utils ]
 
     steps:
+      - name: "Install Git"
+        run: pacman -Syu --noconfirm git
+
       - name: "Checkout PKGBUILDs from AUR"
         run: |
             git clone https://aur.archlinux.org/nvidia-vaapi-driver-git.git
@@ -346,6 +370,9 @@ jobs:
     needs: [ build-nvidia-vaapi-driver ]
 
     steps:
+      - name: "Install Git"
+        run: pacman -Syu --noconfirm git
+
       - name: "Checkout PKGBUILDs from AUR"
         run: |
             git clone https://aur.archlinux.org/winesync.git
@@ -391,6 +418,9 @@ jobs:
     needs: [ build-winesync ]
 
     steps:
+      - name: "Install Git"
+        run: pacman -Syu --noconfirm git
+
       - name: "Checkout PKGBUILDs from Github"
         run: |
             git clone https://github.com/Frogging-Family/mesa-git.git

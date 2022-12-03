@@ -14,6 +14,9 @@ jobs:
       arch_repo: "x86_64"
 
     steps:
+      - name: "Install Git"
+        run: pacman -Syu --noconfirm git
+
       - name: "Checkout PKGBUILDs"
         run: |
             git clone https://github.com/Hybrid-Project-Developers/Hybrid-Linux-PKGBUILDs.git
@@ -55,6 +58,9 @@ jobs:
     needs: [ build-amdgpu-opencl-switcher ]
 
     steps:
+      - name: "Install Git"
+        run: pacman -Syu --noconfirm git
+
       - name: "Checkout PKGBUILDs"
         run: |
             git clone https://github.com/Hybrid-Project-Developers/Hybrid-Linux-PKGBUILDs.git
@@ -96,6 +102,9 @@ jobs:
     needs: [ build-amdgpu-vulkan-switcher ]
 
     steps:
+      - name: "Install Git"
+        run: pacman -Syu --noconfirm git
+
       - name: "Checkout PKGBUILDs from AUR"
         run: |
             git clone https://aur.archlinux.org/hidpi-daemon.git
@@ -137,6 +146,9 @@ jobs:
     needs: [ build-amdgpu-vulkan-switcher ]
 
     steps:
+      - name: "Install Git"
+        run: pacman -Syu --noconfirm git
+
       - name: "Checkout PKGBUILDs from AUR"
         run: |
             git clone https://aur.archlinux.org/nvidia-tweaks.git

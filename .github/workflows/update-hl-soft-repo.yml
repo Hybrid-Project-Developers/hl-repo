@@ -15,6 +15,9 @@ jobs:
       arch_repo: "x86_64"
 
     steps:
+      - name: "Install Git"
+        run: pacman -Syu --noconfirm git
+
       - name: "Checkout PKGBUILDs from AUR"
         run: |
             git clone https://aur.archlinux.org/asusctl.git
@@ -56,6 +59,9 @@ jobs:
     needs: [ build-asusctl-and-rog-control-center ]
 
     steps:
+      - name: "Install Git"
+        run: pacman -Syu --noconfirm git
+
       - name: "Checkout PKGBUILDs from AUR"
         run: |
             git clone https://aur.archlinux.org/obs-studio-amf.git
@@ -108,6 +114,9 @@ jobs:
     needs: [ build-obs-studio-amf ]
 
     steps:
+      - name: "Install Git"
+        run: pacman -Syu --noconfirm git
+
       - name: "Checkout PKGBUILDs"
         run: |
             git clone https://github.com/Hybrid-Project-Developers/Hybrid-Linux-PKGBUILDs.git
@@ -149,6 +158,9 @@ jobs:
     needs: [ build-startwine ]
 
     steps:
+      - name: "Install Git"
+        run: pacman -Syu --noconfirm git
+
       - name: "Checkout PKGBUILDs from AUR"
         run: |
             git clone https://aur.archlinux.org/openoffice-bin.git
@@ -190,6 +202,9 @@ jobs:
     needs: [ build-openoffice-bin ]
 
     steps:
+      - name: "Install Git"
+        run: pacman -Syu --noconfirm git
+
       - name: "Checkout PKGBUILDs from AUR"
         run: |
             git clone https://aur.archlinux.org/portproton.git

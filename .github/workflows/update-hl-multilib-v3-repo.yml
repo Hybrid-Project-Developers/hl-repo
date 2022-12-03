@@ -17,6 +17,9 @@ jobs:
       arch_repo: "x86_64_v3"
 
     steps:
+      - name: "Install Git"
+        run: pacman -Syu --noconfirm git
+
       - name: "Checkout PKGBUILDs"
         run: |
             git clone https://aur.archlinux.org/amdgpu-pro-installer-fix.git
@@ -63,6 +66,9 @@ jobs:
     needs: [ build-lib32-amf-amdgpu-pro-fix ]
 
     steps:
+      - name: "Install Git"
+        run: pacman -Syu --noconfirm git
+
       - name: "Checkout PKGBUILDs from Github"
         run: |
             git clone https://github.com/Frogging-Family/mesa-git.git

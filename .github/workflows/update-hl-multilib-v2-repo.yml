@@ -18,6 +18,9 @@ jobs:
       arch_repo: "x86_64_v2"
 
     steps:
+      - name: "Install Git"
+        run: pacman -Syu --noconfirm git
+
       - name: "Checkout PKGBUILDs"
         run: |
             git clone https://aur.archlinux.org/amdgpu-pro-installer-fix.git
