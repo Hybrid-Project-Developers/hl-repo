@@ -30,7 +30,7 @@ jobs:
       - name: "Prepare for makepkg"
         run: |
             pacman -Syu --noconfirm base-devel sudo wget sshpass
-            useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
             cd PKGBUILDs/amdgpu-opencl-switcher
             chown user -R ..
             chown user -R /tmp
