@@ -12,7 +12,11 @@ jobs:
       arch_repo: "x86_64"
 
     runs-on: ubuntu-latest
-    container: archlinux:latest
+    container:
+      image: archlinux
+      options: --privileged
+      volumes:
+        - /sys/fs/cgroup:/sys/fs/cgroup
 
     steps:
       - name: "Install Git"
