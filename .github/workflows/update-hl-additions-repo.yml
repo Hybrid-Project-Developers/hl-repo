@@ -31,7 +31,7 @@ jobs:
         run: |
             pacman -Syu --noconfirm base-devel sudo wget sshpass
             useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-            cd PKGBUILDs
+            cd PKGBUILDs/amdgpu-opencl-switcher
             chown user -R ..
             chown user -R /tmp
             sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
