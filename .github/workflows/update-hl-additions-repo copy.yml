@@ -6,17 +6,14 @@ on:
 
 jobs:
   build-amdgpu-opencl-switcher:
+    runs-on: ubuntu-latest
     env:
-      PKGDEST: /tmp/hl-additions
       repo: "hl-additions"
       arch_repo: "x86_64"
 
-    runs-on: ubuntu-latest
-    container: archlinux:latest
-
     steps:
       - name: "Install Git"
-        run: pacman -Syu --noconfirm git
+        run: apt install git
 
       - name: "Checkout PKGBUILDs"
         run: |
