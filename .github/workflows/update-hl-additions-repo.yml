@@ -19,14 +19,19 @@ jobs:
         run: pacman -Syu --noconfirm git
 
       - name: "Checkout PKGBUILDs"
-        run: |
-            git clone https://github.com/Hybrid-Project-Developers/Hybrid-Linux-PKGBUILDs.git
-            cd /__w/hl-repo/hl-repo/Hybrid-Linux-PKGBUILDs/amdgpu-opencl-switcher
+        uses: actions/checkout@v3
+        with:
+          repository: Hybrid-Project-Developers/Hybrid-Linux-PKGBUILDs
+          path: PKGBUILDs
+        #run: |
+        #    git clone https://github.com/Hybrid-Project-Developers/Hybrid-Linux-PKGBUILDs.git
+        #    cd /__w/hl-repo/hl-repo/Hybrid-Linux-PKGBUILDs/amdgpu-opencl-switcher
 
       - name: "Prepare for makepkg"
         run: |
             pacman -Syu --noconfirm base-devel sudo wget sshpass
             useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            cd PKGBUILDs
             chown user -R ..
             chown user -R /tmp
             sed -i 's/#PACKAGER=""/PACKAGER="${{ secrets.PACKAGER }}"/g' /etc/makepkg.conf
