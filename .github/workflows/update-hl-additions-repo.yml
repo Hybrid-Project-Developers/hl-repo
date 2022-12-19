@@ -39,7 +39,7 @@ jobs:
       - name: "Build amdgpu-opencl-switcher"
         uses: FFY00/build-arch-package@v1
         with:
-          PKGBUILD: PKGBUILDs/amdgpu-opencl-switcher
+          PKGBUILD: $GITHUB_WORKSPACE/.github/workflows/PKGBUILDs/amdgpu-opencl-switcher
           OUTDIR: $PKGDEST
       
       - name: "Upload to repo"
