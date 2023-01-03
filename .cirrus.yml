@@ -102,6 +102,14 @@ update_hl_core_task:
     - echo "Build Calamares"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
+  install_nvidia_470xx_dkms_script:
+    - cd /tmp/cirrus-ci-build/
+    - git clone https://gitlab.com/herecura/packages/nvidia-470xx-dkms.git
+    - cd nvidia-470xx-dkms
+    - chown user -R ..
+    - chown user -R /tmp
+    - su user -c "yes '' | makepkg --noconfirm -si"
+
   build_mhwd_nvidia_470xx_script:
     - cd /tmp/cirrus-ci-build/Hybrid-Linux-PKGBUILDs/mhwd-nvidia-470xx/
     - pacman -Syu --noconfirm base-devel sudo schedtool
@@ -111,6 +119,14 @@ update_hl_core_task:
     - chown user -R /tmp
     - echo "Build Calamares"
     - su user -c "yes '' | makepkg --noconfirm -s"
+
+  install_nvidia_390xx_dkms_script:
+    - cd /tmp/cirrus-ci-build/
+    - git clone https://gitlab.com/herecura/packages/nvidia-390xx-dkms.git
+    - cd nvidia-390xx-dkms
+    - chown user -R ..
+    - chown user -R /tmp
+    - su user -c "yes '' | makepkg --noconfirm -si"
 
   build_mhwd_nvidia_390xx_script:
     - cd /tmp/cirrus-ci-build/Hybrid-Linux-PKGBUILDs/mhwd-nvidia-390xx/
