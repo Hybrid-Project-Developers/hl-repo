@@ -32,7 +32,7 @@ update_hl_core_task:
     - cd mkinitcpio-openswap
     - chown user -R ..
     - chown user -R /tmp
-    - su user -c "yes '' | makepkg --noconfirm -s"
+    - su user -c "yes '' | makepkg --noconfirm -si"
 
   install_ckbcomp_script:
     - cd /tmp/cirrus-ci-build/
@@ -40,7 +40,7 @@ update_hl_core_task:
     - cd ckbcomp
     - chown user -R ..
     - chown user -R /tmp
-    - su user -c "yes '' | makepkg --noconfirm -s"
+    - su user -c "yes '' | makepkg --noconfirm -si"
 
   build_calamares_hybrid_script:
     - cd /tmp/cirrus-ci-build/Hybrid-Linux-PKGBUILDs/calamares-hybrid/
