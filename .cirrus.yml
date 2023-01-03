@@ -36,6 +36,14 @@ update_hl_core_task:
     - echo "Build Mirrorlist"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
+  install_mkinitcpio_openswap_script:
+    - cd /tmp/cirrus-ci-build/
+    - git clone https://aur.archlinux.org/mkinitcpio-openswap.git
+    - cd mkinitcpio-openswap
+    - chown user -R ..
+    - chown user -R /tmp
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
   build_calamares_hybrid_script:
     - cd /tmp/cirrus-ci-build/Hybrid-Linux-PKGBUILDs/calamares-hybrid/
     - pacman -Syu --noconfirm base-devel sudo schedtool
@@ -46,13 +54,101 @@ update_hl_core_task:
     - echo "Build Calamares"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
+  build_lsbrelease_hybrid_script:
+    - cd /tmp/cirrus-ci-build/Hybrid-Linux-PKGBUILDs/lsb-release-hybrid/
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    
+    # Changing owners
+    - chown user -R ..
+    - chown user -R /tmp
+    - echo "Build Calamares"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  build_neofetch_hybrid_script:
+    - cd /tmp/cirrus-ci-build/Hybrid-Linux-PKGBUILDs/neofetch-hybrid/
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    
+    # Changing owners
+    - chown user -R ..
+    - chown user -R /tmp
+    - echo "Build Calamares"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  build_mhwd_hybrid_script:
+    - cd /tmp/cirrus-ci-build/Hybrid-Linux-PKGBUILDs/mhwd-hybrid/
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    
+    # Changing owners
+    - chown user -R ..
+    - chown user -R /tmp
+    - echo "Build Calamares"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  build_mhwd_db_hybrid_script:
+    - cd /tmp/cirrus-ci-build/Hybrid-Linux-PKGBUILDs/mhwd-db-hybrid/
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    
+    # Changing owners
+    - chown user -R ..
+    - chown user -R /tmp
+    - echo "Build Calamares"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  build_mhwd_nvidia_script:
+    - cd /tmp/cirrus-ci-build/Hybrid-Linux-PKGBUILDs/mhwd-nvidia/
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    
+    # Changing owners
+    - chown user -R ..
+    - chown user -R /tmp
+    - echo "Build Calamares"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  build_mhwd_nvidia_470xx_script:
+    - cd /tmp/cirrus-ci-build/Hybrid-Linux-PKGBUILDs/mhwd-nvidia-470xx/
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    
+    # Changing owners
+    - chown user -R ..
+    - chown user -R /tmp
+    - echo "Build Calamares"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  build_mhwd_nvidia_390xx_script:
+    - cd /tmp/cirrus-ci-build/Hybrid-Linux-PKGBUILDs/mhwd-nvidia-390xx/
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    
+    # Changing owners
+    - chown user -R ..
+    - chown user -R /tmp
+    - echo "Build Calamares"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  build_minq_ananicy_norules_git:
+    - cd /tmp/cirrus-ci-build/Hybrid-Linux-PKGBUILDs/minq-ananicy-norules-git/
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    
+    # Changing owners
+    - chown user -R ..
+    - chown user -R /tmp
+    - echo "Build Calamares"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  #build_hybrid_plasma_settings:
+  #  - cd /tmp/cirrus-ci-build/Hybrid-Linux-PKGBUILDs/minq-ananicy-norules-git/
+  #  - pacman -Syu --noconfirm base-devel sudo schedtool
+  #  
+    # Changing owners
+  #  - chown user -R ..
+  #  - chown user -R /tmp
+  #  - echo "Build Calamares"
+  #  - su user -c "yes '' | makepkg --noconfirm -s"
+
   upload_pkgs_to_hl_core_script:
     - echo "Installing Dependencies"
     - pacman -Syu --noconfirm base-devel sudo wget sshpass
     - echo "cd to directory"
     - cd $PKGDEST
-    - echo "Downloading repo-files"
-    - wget https://osdn.net/projects/hybridlinux/storage/hl-core/x86_64/hl-core.db.tar.gz https://osdn.net/projects/hybridlinux/storage/hl-core/x86_64/hl-core.files.tar.gz
     - echo "Updating Repo..."
     - sudo repo-add hl-core.db.tar.gz *.pkg.tar.zst
     - echo "Setting SSH key..."
@@ -129,8 +225,6 @@ update_hl_additions_task:
     - pacman -Syu --noconfirm base-devel sudo wget sshpass
     - echo "cd to directory"
     - cd $PKGDEST
-    - echo "Downloading repo-files"
-    - wget https://osdn.net/projects/hybridlinux/storage/hl-additions/x86_64/hl-additions.db.tar.gz https://osdn.net/projects/hybridlinux/storage/hl-additions/x86_64/hl-additions.files.tar.gz
     - echo "Updating Repo..."
     - sudo repo-add hl-additions.db.tar.gz *.pkg.tar.zst
     - echo "Setting SSH key..."
@@ -258,6 +352,19 @@ update_hl_drivers_task:
     - echo "Build nvidia-vaapi-driver-git"
     - su user -c "yes '' | makepkg --noconfirm -s"
 
+  build_latencyflex_git_script:
+    - cd /tmp/cirrus-ci-build/
+    - echo "Clonning nvidia-vaapi-driver-git from AUR"
+    - git clone https://aur.archlinux.org/latencyflex-git.git
+    - cd latencyflex-git
+    - pacman -Syu --noconfirm base-devel sudo schedtool
+    
+    # Changing owners
+    - chown user -R ..
+    - chown user -R /tmp
+    - echo "Build latencyflex-git"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
   build_winesync_script:
     - cd /tmp/cirrus-ci-build/
     - echo "Clonning winesync from AUR"
@@ -302,18 +409,19 @@ update_hl_soft_task:
     - pacman -Syu --noconfirm git coreutils wget
     - wget https://raw.githubusercontent.com/Hybrid-Project-Developers/linux-tkg/master/prepare_user.sh
     - sh prepare_user.sh
-
-    # Install Yay
-    - git clone https://aur.archlinux.org/yay-bin.git
-    - cd yay-bin
-    - chown user -R ..
-    - su user -c "yes '' | makepkg --noconfirm -si"
-
-    # Install Deps for OBS and asusctl
-    - yay -S amf-amdgpu-pro supergfxctl
+    - mkdir /tmp/.cargo
+    - export CARGO_HOME=/tmp/.cargo
+  
+  install_supergfxctl_script:
     - cd /tmp/cirrus-ci-build/
+    - git clone https://aur.archlinux.org/supergfxctl.git
+    - cd supergfxctl
+    - chown user -R ..
+    - chown user -R /tmp
+    - su user -c "yes '' | makepkg --noconfirm -s"
 
   build_asusctl_script:
+    - cd /tmp/cirrus-ci-build/
     - echo "Clone asusctl from AUR"
     - git clone https://aur.archlinux.org/asusctl.git
     - cd asusctl
@@ -323,6 +431,14 @@ update_hl_soft_task:
     - chown user -R ..
     - chown user -R /tmp
     - echo "Build asusctl"
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+  install_amf_amdgpu_pro_script:
+    - cd /tmp/cirrus-ci-build/
+    - git clone https://aur.archlinux.org/amdgpu-pro-installer.git
+    - cd amdgpu-pro-installer
+    - chown user -R ..
+    - chown user -R /tmp
     - su user -c "yes '' | makepkg --noconfirm -s"
 
   build_obs_studio_amf_script:
@@ -382,8 +498,6 @@ update_hl_soft_task:
     - pacman -Syu --noconfirm base-devel sudo wget sshpass
     - echo "cd to directory"
     - cd $PKGDEST
-    - echo "Downloading repo-files"
-    - wget https://osdn.net/projects/hybridlinux/storage/hl-soft/x86_64/hl-soft.db.tar.gz https://osdn.net/projects/hybridlinux/storage/hl-soft/x86_64/hl-soft.files.tar.gz
     - echo "Updating Repo..."
     - sudo repo-add hl-soft.db.tar.gz *.pkg.tar.zst
     - echo "Setting SSH key..."
