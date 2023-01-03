@@ -6,8 +6,22 @@ update_hl_core_task:
   env:
     PKGDEST: /tmp/hl-core
 
+  prepare_user_script:
+    - wget https://raw.githubusercontent.com/Hybrid-Project-Developers/linux-tkg/master/prepare_user.sh
+    - sh prepare_user.sh
+
   install_deps_script:
     - pacman -Syu --noconfirm git coreutils wget
+
+    # Install Yay
+    - git clone https://aur.archlinux.org/yay-bin.git
+    - cd yay-bin
+    - chown user -R ..
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
+    # Install Deps for OBS and asusctl
+    - yay -S mkinitcpio-openswap
+    - cd /tmp/cirrus-ci-build/
 
   setup_locale_script:
     - sed -i 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /etc/locale.gen
@@ -19,7 +33,6 @@ update_hl_core_task:
     - git clone https://github.com/Hybrid-Project-Developers/Hybrid-Linux-PKGBUILDs.git
     - cd Hybrid-Linux-PKGBUILDs/hybrid-mirrorlist
     - pacman -Syu --noconfirm base-devel sudo schedtool
-    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
     - chown user -R ..
     - chown user -R /tmp
     - echo "Build Mirrorlist"
@@ -28,7 +41,8 @@ update_hl_core_task:
   build_calamares_hybrid_script:
     - cd /tmp/cirrus-ci-build/Hybrid-Linux-PKGBUILDs/calamares-hybrid/
     - pacman -Syu --noconfirm base-devel sudo schedtool
-    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    
+    # Changing owners
     - chown user -R ..
     - chown user -R /tmp
     - echo "Build Calamares"
@@ -67,7 +81,8 @@ update_hl_additions_task:
     - git clone https://github.com/Hybrid-Project-Developers/Hybrid-Linux-PKGBUILDs.git
     - cd Hybrid-Linux-PKGBUILDs/amdgpu-opencl-switcher
     - pacman -Syu --noconfirm base-devel sudo schedtool
-    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    
+    # Changing owners
     - chown user -R ..
     - chown user -R /tmp
     - echo "Build amdgpu-opencl-swithcer"
@@ -76,7 +91,8 @@ update_hl_additions_task:
   build_amdgpu_vulkan_switcher_script:
     - cd /tmp/cirrus-ci-build/Hybrid-Linux-PKGBUILDs/amdgpu-vulkan-switcher
     - pacman -Syu --noconfirm base-devel sudo schedtool
-    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    
+    # Changing owners
     - chown user -R ..
     - chown user -R /tmp
     - echo "Build amdgpu-vulkan-switcher"
@@ -88,7 +104,8 @@ update_hl_additions_task:
     - git clone https://aur.archlinux.org/hidpi-daemon.git
     - cd hidpi-daemon
     - pacman -Syu --noconfirm base-devel sudo schedtool
-    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    
+    # Changing owners
     - chown user -R ..
     - chown user -R /tmp
     - echo "Build hidpi-daemon"
@@ -100,7 +117,8 @@ update_hl_additions_task:
     - git clone https://aur.archlinux.org/nvidia-tweaks.git
     - cd nvidia-tweaks
     - pacman -Syu --noconfirm base-devel sudo schedtool
-    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    
+    # Changing owners
     - chown user -R ..
     - chown user -R /tmp
     - echo "Build nvidia-tweaks"
@@ -140,7 +158,8 @@ update_hl_drivers_task:
     - git clone https://aur.archlinux.org/amdgpu-pro-installer-fix.git
     - cd amdgpu-pro-installer-fix
     - pacman -Syu --noconfirm base-devel sudo schedtool
-    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    
+    # Changing owners
     - chown user -R ..
     - chown user -R /tmp
     - echo "Build amf-amdgpu-pro-fix"
@@ -152,7 +171,8 @@ update_hl_drivers_task:
     - git clone https://aur.archlinux.org/e1000e-dkms.git
     - cd e1000e-dkms
     - pacman -Syu --noconfirm base-devel sudo schedtool
-    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    
+    # Changing owners
     - chown user -R ..
     - chown user -R /tmp
     - echo "Build e1000e-dkms"
@@ -164,7 +184,8 @@ update_hl_drivers_task:
     - git clone https://aur.archlinux.org/hid-sony-panic-fix-dkms.git
     - cd hid-sony-panic-fix-dkms
     - pacman -Syu --noconfirm base-devel sudo schedtool
-    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    
+    # Changing owners
     - chown user -R ..
     - chown user -R /tmp
     - echo "Build hid-sony-panic-fix-dkms"
@@ -176,7 +197,8 @@ update_hl_drivers_task:
     - git clone https://gitlab.com/herecura/packages/nvidia-390xx-dkms.git
     - cd nvidia-390xx-dkms
     - pacman -Syu --noconfirm base-devel sudo schedtool
-    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    
+    # Changing owners
     - chown user -R ..
     - chown user -R /tmp
     - echo "Build nvidia-390xx-dkms"
@@ -188,7 +210,8 @@ update_hl_drivers_task:
     - git clone https://gitlab.com/herecura/packages/nvidia-390xx-utils.git
     - cd nvidia-390xx-utils
     - pacman -Syu --noconfirm base-devel sudo schedtool
-    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    
+    # Changing owners
     - chown user -R ..
     - chown user -R /tmp
     - echo "Build nvidia-390xx-dkms"
@@ -200,7 +223,8 @@ update_hl_drivers_task:
     - git clone https://gitlab.com/herecura/packages/nvidia-470xx-dkms.git
     - cd nvidia-470xx-dkms
     - pacman -Syu --noconfirm base-devel sudo schedtool
-    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    
+    # Changing owners
     - chown user -R ..
     - chown user -R /tmp
     - echo "Build nvidia-390xx-dkms"
@@ -212,7 +236,8 @@ update_hl_drivers_task:
     - git clone https://gitlab.com/herecura/packages/nvidia-470xx-utils.git
     - cd nvidia-470xx-utils
     - pacman -Syu --noconfirm base-devel sudo schedtool
-    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    
+    # Changing owners
     - chown user -R ..
     - chown user -R /tmp
     - echo "Build nvidia-390xx-dkms"
@@ -224,7 +249,8 @@ update_hl_drivers_task:
     - git clone https://aur.archlinux.org/nvidia-vaapi-driver-git.git
     - cd nvidia-vaapi-driver-git
     - pacman -Syu --noconfirm base-devel sudo schedtool
-    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    
+    # Changing owners
     - chown user -R ..
     - chown user -R /tmp
     - echo "Build nvidia-vaapi-driver-git"
@@ -236,7 +262,8 @@ update_hl_drivers_task:
     - git clone https://aur.archlinux.org/winesync.git
     - cd winesync
     - pacman -Syu --noconfirm base-devel sudo schedtool
-    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    
+    # Changing owners
     - chown user -R ..
     - chown user -R /tmp
     - echo "Build winesync"
@@ -287,7 +314,8 @@ update_hl_soft_task:
     - git clone https://aur.archlinux.org/asusctl.git
     - cd asusctl
     - pacman -Syu --noconfirm base-devel sudo schedtool
-    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    
+    # Changing owners
     - chown user -R ..
     - chown user -R /tmp
     - echo "Build asusctl"
@@ -299,7 +327,8 @@ update_hl_soft_task:
     - git clone https://aur.archlinux.org/obs-studio-amf.git
     - cd obs-studio-amf
     - pacman -Syu --noconfirm base-devel sudo schedtool
-    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    
+    # Changing owners
     - chown user -R ..
     - chown user -R /tmp
     - echo "Build obs-studio-amf"
@@ -311,7 +340,8 @@ update_hl_soft_task:
     - git clone https://github.com/Hybrid-Project-Developers/Hybrid-Linux-PKGBUILDs.git
     - cd Hybrid-Linux-PKGBUILDs/startwine
     - pacman -Syu --noconfirm base-devel sudo schedtool
-    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    
+    # Changing owners
     - chown user -R ..
     - chown user -R /tmp
     - echo "Build startwine"
@@ -323,7 +353,8 @@ update_hl_soft_task:
     - git clone https://aur.archlinux.org/portproton.git
     - cd portproton
     - pacman -Syu --noconfirm base-devel sudo schedtool
-    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    
+    # Changing owners
     - chown user -R ..
     - chown user -R /tmp
     - echo "Build portproton"
@@ -335,7 +366,8 @@ update_hl_soft_task:
     - git clone https://aur.archlinux.org/openoffice-bin.git
     - cd openoffice-bin
     - pacman -Syu --noconfirm base-devel sudo schedtool
-    - useradd user -G wheel && echo "user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    
+    # Changing owners
     - chown user -R ..
     - chown user -R /tmp
     - echo "Build openoffice-bin"
