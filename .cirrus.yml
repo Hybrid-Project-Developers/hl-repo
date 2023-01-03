@@ -9,6 +9,11 @@ update_hl_core_task:
   install_deps_script:
     - pacman -Syu --noconfirm git coreutils wget
 
+  setup_locale_script:
+    - sed -i 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /etc/locale.gen
+    - locale-gen
+    - echo "LANG=en_US.UTF-8" > /etc/locale.conf
+
   build_mirrorlists_script:
     - echo "Checkout PKGBUILDs Repo"
     - git clone https://github.com/Hybrid-Project-Developers/Hybrid-Linux-PKGBUILDs.git
