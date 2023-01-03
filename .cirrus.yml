@@ -6,12 +6,10 @@ update_hl_core_task:
   env:
     PKGDEST: /tmp/hl-core
 
-  prepare_user_script:
-    - wget https://raw.githubusercontent.com/Hybrid-Project-Developers/linux-tkg/master/prepare_user.sh
-    - sh prepare_user.sh
-
   install_deps_script:
     - pacman -Syu --noconfirm git coreutils wget
+    - wget https://raw.githubusercontent.com/Hybrid-Project-Developers/linux-tkg/master/prepare_user.sh
+    - sh prepare_user.sh
 
     # Install Yay
     - git clone https://aur.archlinux.org/yay-bin.git
@@ -75,6 +73,8 @@ update_hl_additions_task:
 
   install_deps_script:
     - pacman -Syu --noconfirm git coreutils wget
+    - wget https://raw.githubusercontent.com/Hybrid-Project-Developers/linux-tkg/master/prepare_user.sh
+    - sh prepare_user.sh
 
   build_amdgpu_opencl_switcher_script:
     - echo "Checkout PKGBUILDs Repo"
@@ -152,6 +152,8 @@ update_hl_drivers_task:
   
   install_deps_script:
     - pacman -Syu --noconfirm git coreutils wget
+    - wget https://raw.githubusercontent.com/Hybrid-Project-Developers/linux-tkg/master/prepare_user.sh
+    - sh prepare_user.sh
 
   build_amf_amdgpu_pro_fix_script:
     - echo "Checkout amf-amdgpu-pro-fix AUR Repo"
@@ -298,6 +300,8 @@ update_hl_soft_task:
 
   install_deps_script:
     - pacman -Syu --noconfirm git coreutils wget
+    - wget https://raw.githubusercontent.com/Hybrid-Project-Developers/linux-tkg/master/prepare_user.sh
+    - sh prepare_user.sh
 
     # Install Yay
     - git clone https://aur.archlinux.org/yay-bin.git
