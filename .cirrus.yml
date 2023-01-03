@@ -15,7 +15,7 @@ update_hl_core_task:
     - git clone https://aur.archlinux.org/yay-bin.git
     - cd yay-bin
     - chown user -R ..
-    - su user -c "yes '' | makepkg --noconfirm -s"
+    - su user -c "yes '' | makepkg --noconfirm -si"
 
     # Install Deps for OBS and asusctl
     - yay -S mkinitcpio-openswap
@@ -307,7 +307,7 @@ update_hl_soft_task:
     - git clone https://aur.archlinux.org/yay-bin.git
     - cd yay-bin
     - chown user -R ..
-    - su user -c "yes '' | makepkg --noconfirm -s"
+    - su user -c "yes '' | makepkg --noconfirm -si"
 
     # Install Deps for OBS and asusctl
     - yay -S amf-amdgpu-pro supergfxctl
