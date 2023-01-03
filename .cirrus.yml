@@ -11,16 +11,6 @@ update_hl_core_task:
     - wget https://raw.githubusercontent.com/Hybrid-Project-Developers/linux-tkg/master/prepare_user.sh
     - sh prepare_user.sh
 
-    # Install Yay
-    - git clone https://aur.archlinux.org/yay-bin.git
-    - cd yay-bin
-    - chown user -R ..
-    - su user -c "yes '' | makepkg --noconfirm -si"
-
-    # Install Deps for OBS and asusctl
-    - yay -S mkinitcpio-openswap
-    - cd /tmp/cirrus-ci-build/
-
   setup_locale_script:
     - sed -i 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /etc/locale.gen
     - locale-gen
