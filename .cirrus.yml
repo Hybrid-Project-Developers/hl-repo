@@ -34,6 +34,14 @@ update_hl_core_task:
     - chown user -R /tmp
     - su user -c "yes '' | makepkg --noconfirm -s"
 
+  install_ckbcomp_script:
+    - cd /tmp/cirrus-ci-build/
+    - git clone https://aur.archlinux.org/ckbcomp.git
+    - cd ckbcomp
+    - chown user -R ..
+    - chown user -R /tmp
+    - su user -c "yes '' | makepkg --noconfirm -s"
+
   build_calamares_hybrid_script:
     - cd /tmp/cirrus-ci-build/Hybrid-Linux-PKGBUILDs/calamares-hybrid/
     - pacman -Syu --noconfirm base-devel sudo schedtool
