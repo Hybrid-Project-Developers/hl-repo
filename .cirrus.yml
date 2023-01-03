@@ -2,7 +2,7 @@ update_hl_core_task:
   container:
     cpu: 4
     memory: 16G
-    image: archlinux:latest
+    image: archlinux:base-devel
   env:
     PKGDEST: /tmp/hl-core
 
@@ -67,7 +67,7 @@ update_hl_additions_task:
   container:
     cpu: 4
     memory: 16G
-    image: archlinux:latest
+    image: archlinux:base-devel
   env:
     PKGDEST: /tmp/hl-additions
 
@@ -146,7 +146,7 @@ update_hl_drivers_task:
   container:
     cpu: 4
     memory: 16G
-    image: archlinux:latest
+    image: archlinux:base-devel
   env:
     PKGDEST: /tmp/hl-drivers
   
@@ -294,7 +294,7 @@ update_hl_soft_task:
   container:
     cpu: 4
     memory: 16G
-    image: archlinux:latest
+    image: archlinux:base-devel
   env:
     PKGDEST: /tmp/hl-soft
 
