@@ -108,6 +108,7 @@ update_hl_core_task:
     - cd nvidia-470xx-dkms
     - chown user -R ..
     - chown user -R /tmp
+    - pacman -Rdd nvidia-390xx-dkms
     - su user -c "yes '' | makepkg --noconfirm -si"
 
   build_mhwd_nvidia_470xx_script:
@@ -262,6 +263,10 @@ update_hl_drivers_task:
     - pacman -Syu --noconfirm git coreutils wget
     - wget https://raw.githubusercontent.com/Hybrid-Project-Developers/linux-tkg/master/prepare_user.sh
     - sh prepare_user.sh
+  
+  add_multilib_script:
+    - sed -i '$ a \\n[multilib]\nInclude = /etc/pacman.d/mirrorlist' /etc/pacman.conf
+    - sudo pacman -Syu
 
   build_amf_amdgpu_pro_fix_script:
     - echo "Checkout amf-amdgpu-pro-fix AUR Repo"
